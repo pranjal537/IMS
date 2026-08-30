@@ -8,6 +8,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from accounts import views as accounts_views
+from interns import views as interns_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -22,6 +23,16 @@ urlpatterns = [
     path('password-change/', accounts_views.password_change_view, name='password_change'),
     path('password/change/', accounts_views.password_change_view),
     path('health/', accounts_views.health_view, name='health_check'),
+
+    # Phase 3 Core Routes
+    path('supervisor/interns/', interns_views.supervisor_my_interns_view, name='supervisor_my_interns'),
+    path('supervisor/profile/', interns_views.supervisor_profile_view, name='supervisor_profile'),
+    path('intern/internship/', interns_views.intern_my_internship_view, name='intern_my_internship'),
+    path('intern/profile/', interns_views.intern_profile_view, name='intern_profile'),
+    path('departments/', interns_views.department_list_view, name='department_list'),
+    path('departments/create/', interns_views.department_create_view, name='department_create'),
+    path('departments/<int:pk>/edit/', interns_views.department_edit_view, name='department_edit'),
+    path('departments/<int:pk>/delete/', interns_views.department_delete_view, name='department_delete'),
 
     # App namespaced routes
     path('accounts/', include('accounts.urls')),

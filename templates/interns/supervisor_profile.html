@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}Supervisor Profile — Damak Municipality IMS{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1 small">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Supervisor Profile</li>
+                </ol>
+            </nav>
+            <h2 class="fw-bold mb-0 text-dark">Supervisor Profile</h2>
+            <p class="text-muted small mb-0">View and update your supervisor account details.</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="card ims-card border-0 shadow-sm">
+                <div class="card-header bg-transparent border-bottom py-3">
+                    <h6 class="fw-bold mb-0 text-dark"><i class="bi bi-pencil-square me-2 text-primary"></i>Edit Profile Information</h6>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Phone Number</label>
+                            {{ form.phone }}
+                            {% if form.phone.errors %}<div class="text-danger small">{{ form.phone.errors.0 }}</div>{% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Position / Designation</label>
+                            {{ form.position }}
+                            {% if form.position.errors %}<div class="text-danger small">{{ form.position.errors.0 }}</div>{% endif %}
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold small">Profile Photo</label>
+                            {{ form.profile_photo }}
+                            {% if form.profile_photo.errors %}<div class="text-danger small">{{ form.profile_photo.errors.0 }}</div>{% endif %}
+                        </div>
+
+                        <button type="submit" class="btn btn-primary fw-semibold">
+                            <i class="bi bi-check-circle me-1"></i>Save Changes
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="card ims-card border-0 shadow-sm">
+                <div class="card-header bg-transparent border-bottom py-3">
+                    <h6 class="fw-bold mb-0 text-dark"><i class="bi bi-shield-lock me-2 text-primary"></i>System Information (Protected)</h6>
+                </div>
+                <div class="card-body small">
+                    <div class="py-2 border-bottom d-flex justify-content-between">
+                        <span class="text-muted">Full Name</span>
+                        <strong class="text-dark">{{ request.user.get_full_name }}</strong>
+                    </div>
+                    <div class="py-2 border-bottom d-flex justify-content-between">
+                        <span class="text-muted">Email Address</span>
+                        <strong class="text-dark">{{ request.user.email }}</strong>
+                    </div>
+                    <div class="py-2 border-bottom d-flex justify-content-between">
+                        <span class="text-muted">Employee ID</span>
+                        <span class="badge bg-primary">{{ profile.employee_id }}</span>
+                    </div>
+                    <div class="py-2 d-flex justify-content-between">
+                        <span class="text-muted">Department</span>
+                        <strong class="text-dark">{{ profile.department.name|default:"Not Assigned" }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

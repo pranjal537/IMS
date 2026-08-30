@@ -55,10 +55,17 @@
                     </a>
                 </li>
                 <li class="ims-nav-item">
-                    <a href="#" class="ims-nav-link disabled-link" title="Available in Phase 3">
+                    <a href="{% url 'supervisor_my_interns' %}"
+                       class="ims-nav-link {% if request.resolver_match.url_name == 'supervisor_my_interns' %}active{% endif %}">
                         <i class="bi bi-people"></i>
                         <span>My Interns</span>
-                        <span class="badge bg-secondary ms-auto" style="font-size:0.65rem;">Soon</span>
+                    </a>
+                </li>
+                <li class="ims-nav-item">
+                    <a href="{% url 'supervisor_profile' %}"
+                       class="ims-nav-link {% if request.resolver_match.url_name == 'supervisor_profile' %}active{% endif %}">
+                        <i class="bi bi-person-circle"></i>
+                        <span>My Profile</span>
                     </a>
                 </li>
             </ul>
@@ -71,22 +78,42 @@
                 <li class="ims-nav-item">
                     <a href="{% url 'intern_dashboard' %}"
                        class="ims-nav-link {% if request.resolver_match.url_name == 'intern_dashboard' %}active{% endif %}">
-                        <i class="bi bi-person-badge"></i>
+                        <i class="bi bi-speedometer2"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
                 <li class="ims-nav-item">
-                    <a href="#" class="ims-nav-link disabled-link" title="Available in Phase 3">
-                        <i class="bi bi-person-circle"></i>
-                        <span>My Profile</span>
-                        <span class="badge bg-secondary ms-auto" style="font-size:0.65rem;">Soon</span>
+                    <a href="{% url 'intern_my_internship' %}"
+                       class="ims-nav-link {% if request.resolver_match.url_name == 'intern_my_internship' %}active{% endif %}">
+                        <i class="bi bi-briefcase"></i>
+                        <span>My Internship</span>
                     </a>
                 </li>
                 <li class="ims-nav-item">
-                    <a href="#" class="ims-nav-link disabled-link" title="Available in Phase 3">
-                        <i class="bi bi-briefcase"></i>
-                        <span>My Internship</span>
-                        <span class="badge bg-secondary ms-auto" style="font-size:0.65rem;">Soon</span>
+                    <a href="{% url 'intern_profile' %}"
+                       class="ims-nav-link {% if request.resolver_match.url_name == 'intern_profile' %}active{% endif %}">
+                        <i class="bi bi-person-circle"></i>
+                        <span>My Profile</span>
+                    </a>
+                </li>
+            </ul>
+            {% endif %}
+
+            <!-- ── Staff Management Navigation ── -->
+            {% if user.is_staff %}
+            <div class="ims-nav-section-title">Administration</div>
+            <ul class="ims-sidebar-nav">
+                <li class="ims-nav-item">
+                    <a href="{% url 'department_list' %}"
+                       class="ims-nav-link {% if request.resolver_match.url_name == 'department_list' %}active{% endif %}">
+                        <i class="bi bi-diagram-3"></i>
+                        <span>Departments</span>
+                    </a>
+                </li>
+                <li class="ims-nav-item">
+                    <a href="/admin/" class="ims-nav-link" target="_blank">
+                        <i class="bi bi-shield-lock"></i>
+                        <span>Django Admin</span>
                     </a>
                 </li>
             </ul>

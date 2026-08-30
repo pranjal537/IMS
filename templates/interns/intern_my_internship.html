@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block title %}My Internship — Damak Municipality IMS{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+
+    <!-- Page Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1 small">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'intern_dashboard' %}" class="text-decoration-none">Intern Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">My Internship</li>
+                </ol>
+            </nav>
+            <h2 class="fw-bold mb-0 text-dark">My Internship Details</h2>
+            <p class="text-muted small mb-0">Overview of your current placement, assigned supervisor, and working day progress.</p>
+        </div>
+    </div>
+
+    {% if internship %}
+        <!-- Top Banner Card -->
+        <div class="card ims-card border-0 mb-4 p-4" style="background: linear-gradient(135deg, #064e3b 0%, #065f46 60%, #10b981 100%);">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center gap-3 mb-2">
+                        <div class="rounded-circle bg-white bg-opacity-20 text-white fw-bold d-flex align-items-center justify-content-center" style="width:52px;height:52px;font-size:1.2rem;">
+                            {{ request.user.get_initials }}
+                        </div>
+                        <div>
+                            <h4 class="text-white fw-bold mb-0">{{ request.user.get_full_name }}</h4>
+                            <span class="badge bg-white text-success px-2">{{ intern_profile.intern_id }}</span>
+                        </div>
+                    </div>
+                    <p class="text-white-50 mb-0 small">
+                        <i class="bi bi-buildings me-1"></i>{{ internship.department.name }} Department &bull;
+                        <i class="bi bi-briefcase me-1"></i>{{ internship.position }}
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <span class="badge px-3 py-2 fs-6 {% if internship.status == 'ACTIVE' %}bg-light text-success{% elif internship.status == 'COMPLETED' %}bg-light text-primary{% else %}bg-light text-warning{% endif %}">
+                        Status: {{ internship.get_status_display }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Metrics Row -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="card ims-card border-0 shadow-sm text-center p-3">
+                    <div class="text-muted small mb-1"><i class="bi bi-calendar-check me-1 text-primary"></i>Total Working Days</div>
+                    <h3 class="fw-bold text-dark mb-0">{{ metrics.total_working_days }}</h3>
+                    <div class="text-muted style-xs">Mon–Fri Weekdays</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card ims-card border-0 shadow-sm text-center p-3">
+                    <div class="text-muted small mb-1"><i class="bi bi-check-circle me-1 text-success"></i>Completed Days</div>
+                    <h3 class="fw-bold text-success mb-0">{{ metrics.completed_working_days }}</h3>
+                    <div class="text-muted style-xs">Days Completed</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card ims-card border-0 shadow-sm text-center p-3">
+                    <div class="text-muted small mb-1"><i class="bi bi-hourglass-split me-1 text-warning"></i>Remaining Days</div>
+                    <h3 class="fw-bold text-warning mb-0">{{ metrics.remaining_working_days }}</h3>
+                    <div class="text-muted style-xs">Days Remaining</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card ims-card border-0 shadow-sm text-center p-3">
+                    <div class="text-muted small mb-1"><i class="bi bi-percent me-1 text-info"></i>Overall Progress</div>
+                    <h3 class="fw-bold text-info mb-0">{{ metrics.progress_percentage }}%</h3>
+                    <div class="text-muted style-xs">Completion Rate</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Bar Card -->
+        <div class="card ims-card border-0 mb-4 shadow-sm">
+            <div class="card-body">
+                <h6 class="fw-bold text-dark mb-2"><i class="bi bi-bar-chart-line me-2 text-success"></i>Internship Duration Progress</h6>
+                <div class="progress mb-2" style="height: 14px;">
+                    <div class="progress-bar bg-success progress-bar-striped progress-bar-animated"
+                         role="progressbar" style="width: {{ metrics.progress_percentage }}%;"
+                         aria-valuenow="{{ metrics.progress_percentage }}" aria-valuemin="0" aria-valuemax="100">
+                        {{ metrics.progress_percentage }}%
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between small text-muted">
+                    <span>Start Date: <strong>{{ internship.start_date|date:"F j, Y" }}</strong></span>
+                    <span>Expected End Date: <strong>{{ internship.expected_end_date|date:"F j, Y" }}</strong></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Placement Breakdown -->
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card ims-card border-0 shadow-sm h-100">
+                    <div class="card-header bg-transparent border-bottom py-3">
+                        <h6 class="fw-bold mb-0 text-dark"><i class="bi bi-person-badge me-2 text-success"></i>Supervisor Information</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="rounded-circle bg-success bg-opacity-10 text-success fw-bold d-flex align-items-center justify-content-center" style="width:48px;height:48px;font-size:1.1rem;">
+                                {{ internship.supervisor.user.get_initials }}
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-0 text-dark">{{ internship.supervisor.user.get_full_name }}</h6>
+                                <div class="text-muted small">{{ internship.supervisor.position|default:"Supervisor" }}</div>
+                            </div>
+                        </div>
+                        <div class="small">
+                            <div class="py-1 border-bottom d-flex justify-content-between"><span class="text-muted">Email:</span> <strong>{{ internship.supervisor.user.email }}</strong></div>
+                            <div class="py-1 border-bottom d-flex justify-content-between"><span class="text-muted">Employee ID:</span> <strong>{{ internship.supervisor.employee_id }}</strong></div>
+                            <div class="py-1 d-flex justify-content-between"><span class="text-muted">Phone:</span> <strong>{{ internship.supervisor.phone|default:"N/A" }}</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card ims-card border-0 shadow-sm h-100">
+                    <div class="card-header bg-transparent border-bottom py-3">
+                        <h6 class="fw-bold mb-0 text-dark"><i class="bi bi-mortarboard me-2 text-success"></i>Academic & Profile Info</h6>
+                    </div>
+                    <div class="card-body small">
+                        <div class="py-1 border-bottom d-flex justify-content-between"><span class="text-muted">College / University:</span> <strong>{{ intern_profile.college|default:"Not specified" }}</strong></div>
+                        <div class="py-1 border-bottom d-flex justify-content-between"><span class="text-muted">Program / Degree:</span> <strong>{{ intern_profile.program|default:"Not specified" }}</strong></div>
+                        <div class="py-1 border-bottom d-flex justify-content-between"><span class="text-muted">Semester / Year:</span> <strong>{{ intern_profile.semester_or_year|default:"Not specified" }}</strong></div>
+                        <div class="py-1 border-bottom d-flex justify-content-between"><span class="text-muted">Phone:</span> <strong>{{ intern_profile.phone|default:"Not specified" }}</strong></div>
+                        <div class="py-1 d-flex justify-content-between"><span class="text-muted">Address:</span> <strong>{{ intern_profile.address|default:"Not specified" }}</strong></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% else %}
+        <div class="card ims-card border-0 text-center py-5 shadow-sm">
+            <div class="card-body">
+                <div class="rounded-circle ims-badge-soft-success mx-auto d-flex align-items-center justify-content-center mb-3" style="width:64px;height:64px;font-size:1.75rem;">
+                    <i class="bi bi-briefcase"></i>
+                </div>
+                <h5 class="fw-bold text-dark">No Active Internship Record</h5>
+                <p class="text-muted small">You do not currently have an active internship assigned in the system. Please contact your supervisor or municipality administration.</p>
+            </div>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

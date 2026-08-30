@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block title %}My Interns — Damak Municipality IMS{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+
+    <!-- Page Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1 small">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'supervisor_dashboard' %}" class="text-decoration-none">Supervisor Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">My Interns</li>
+                </ol>
+            </nav>
+            <h2 class="fw-bold mb-0 text-dark">My Assigned Interns</h2>
+            <p class="text-muted small mb-0">Manage and monitor interns assigned under your supervision.</p>
+        </div>
+    </div>
+
+    <!-- Search & Filter Bar -->
+    <div class="card ims-card border-0 mb-4 p-3 shadow-sm">
+        <form method="get" class="row g-3 align-items-center">
+            <div class="col-md-5">
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+                    <input type="text" name="q" value="{{ search_query }}" class="form-control border-start-0" placeholder="Search by name, ID, or position...">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <select name="status" class="form-select">
+                    <option value="">All Statuses</option>
+                    {% for val, label in statuses %}
+                        <option value="{{ val }}" {% if selected_status == val %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select name="department" class="form-select">
+                    <option value="">All Departments</option>
+                    {% for dept in departments %}
+                        <option value="{{ dept.id }}" {% if selected_department == dept.id|stringformat:"s" %}selected{% endif %}>{{ dept.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-1 d-flex gap-1">
+                <button type="submit" class="btn btn-primary w-100"><i class="bi bi-funnel"></i></button>
+                {% if search_query or selected_status or selected_department %}
+                    <a href="{% url 'supervisor_my_interns' %}" class="btn btn-outline-secondary" title="Clear Filters"><i class="bi bi-x-lg"></i></a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+    <!-- Intern Roster -->
+    {% if internships_data %}
+        <div class="row g-4">
+            {% for item in internships_data %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card ims-card h-100 shadow-sm border-0 position-relative">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div>
+                                    <span class="badge bg-light text-dark border mb-1">{{ item.internship.intern.intern_id }}</span>
+                                    <h5 class="fw-bold mb-0 text-dark">{{ item.internship.intern.user.get_full_name }}</h5>
+                                    <div class="text-muted small"><i class="bi bi-envelope me-1"></i>{{ item.internship.intern.user.email }}</div>
+                                </div>
+                                <span class="badge {% if item.internship.status == 'ACTIVE' %}bg-success{% elif item.internship.status == 'COMPLETED' %}bg-primary{% elif item.internship.status == 'CANCELLED' %}bg-danger{% else %}bg-warning text-dark{% endif %}">
+                                    {{ item.internship.get_status_display }}
+                                </span>
+                            </div>
+
+                            <div class="small text-muted mb-3">
+                                <div><strong class="text-dark">Department:</strong> {{ item.internship.department.name }}</div>
+                                <div><strong class="text-dark">Position:</strong> {{ item.internship.position }}</div>
+                                <div><strong class="text-dark">Dates:</strong> {{ item.internship.start_date|date:"M j, Y" }} &rarr; {{ item.internship.expected_end_date|date:"M j, Y" }}</div>
+                            </div>
+
+                            <!-- Progress Bar -->
+                            <div class="mt-3">
+                                <div class="d-flex justify-content-between align-items-center small mb-1">
+                                    <span class="fw-semibold text-dark">Working Days Progress</span>
+                                    <span class="fw-bold text-primary">{{ item.metrics.progress_percentage }}%</span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar {% if item.metrics.progress_percentage == 100 %}bg-success{% else %}bg-primary{% endif %}"
+                                         role="progressbar" style="width: {{ item.metrics.progress_percentage }}%;"
+                                         aria-valuenow="{{ item.metrics.progress_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center text-muted small mt-2">
+                                    <span>Completed: <strong>{{ item.metrics.completed_working_days }}</strong>/{{ item.metrics.total_working_days }} days</span>
+                                    <span>Remaining: <strong>{{ item.metrics.remaining_working_days }}</strong> days</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="card ims-card border-0 text-center py-5 shadow-sm">
+            <div class="card-body">
+                <div class="rounded-circle ims-badge-soft-primary mx-auto d-flex align-items-center justify-content-center mb-3" style="width:64px;height:64px;font-size:1.75rem;">
+                    <i class="bi bi-people"></i>
+                </div>
+                <h5 class="fw-bold text-dark">No Assigned Interns Found</h5>
+                <p class="text-muted small">
+                    {% if search_query or selected_status or selected_department %}
+                        No interns match your search criteria. <a href="{% url 'supervisor_my_interns' %}">Clear filters</a>
+                    {% else %}
+                        You do not currently have any interns assigned to your supervision.
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}
