@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Damak Municipality Intern Management System{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+    <!-- Hero Banner -->
+    <div class="card border-0 bg-primary text-white p-4 p-md-5 rounded-4 shadow-sm mb-4" style="background: linear-gradient(135deg, #0a2540 0%, #0f3d68 60%, #0284c7 100%);">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <span class="badge bg-light text-primary px-3 py-2 rounded-pill fw-semibold mb-3">
+                    <i class="bi bi-geo-alt-fill me-1"></i> Damak Municipality, Koshi Province
+                </span>
+                <h1 class="display-6 fw-bold mb-3">Intern Management System (IMS)</h1>
+                <p class="lead mb-4 text-white-50" style="max-width: 650px;">
+                    A centralized portal designed to streamline municipal internship supervision, daily logbooks, task distribution, and performance evaluations.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="{% url 'supervisor_dashboard' %}" class="btn btn-light btn-lg px-4 fw-semibold text-primary shadow-sm">
+                        <i class="bi bi-speedometer2 me-2"></i>Supervisor Portal
+                    </a>
+                    <a href="{% url 'intern_dashboard' %}" class="btn btn-outline-light btn-lg px-4 fw-semibold">
+                        <i class="bi bi-person-badge me-2"></i>Intern Portal
+                    </a>
+                    <a href="{% url 'login' %}" class="btn btn-link text-white text-decoration-none d-flex align-items-center">
+                        <i class="bi bi-box-arrow-in-right me-1"></i>Sign In
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4 text-center mt-4 mt-lg-0 d-none d-lg-block">
+                <div class="bg-white bg-opacity-10 p-4 rounded-4 border border-white border-opacity-25 shadow">
+                    <i class="bi bi-buildings fs-1 text-info mb-2 d-block"></i>
+                    <h5 class="fw-bold">Phase 1 Foundation</h5>
+                    <p class="small text-white-50 mb-0">System architecture ready with 7 modular apps and MySQL integration support.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Navigation Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-6 col-xl-3">
+            <div class="card h-100 ims-card ims-card-hover p-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="ims-stat-icon ims-badge-soft-primary">
+                        <i class="bi bi-person-workspace"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">Supervisor Workspace</h6>
+                        <small class="text-muted">Oversee interns, verify logs & evaluate</small>
+                    </div>
+                </div>
+                <div class="mt-3 pt-3 border-top">
+                    <a href="{% url 'supervisor_dashboard' %}" class="btn btn-sm btn-outline-primary w-100">
+                        View Dashboard &rarr;
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <div class="card h-100 ims-card ims-card-hover p-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="ims-stat-icon ims-badge-soft-success">
+                        <i class="bi bi-journal-check"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">Intern Workspace</h6>
+                        <small class="text-muted">Submit logs, view tasks & progress</small>
+                    </div>
+                </div>
+                <div class="mt-3 pt-3 border-top">
+                    <a href="{% url 'intern_dashboard' %}" class="btn btn-sm btn-outline-success w-100">
+                        View Dashboard &rarr;
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <div class="card h-100 ims-card ims-card-hover p-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="ims-stat-icon ims-badge-soft-warning">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">Authentication</h6>
+                        <small class="text-muted">Role-based login for staff & interns</small>
+                    </div>
+                </div>
+                <div class="mt-3 pt-3 border-top">
+                    <a href="{% url 'login' %}" class="btn btn-sm btn-outline-warning w-100">
+                        Login Page &rarr;
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <div class="card h-100 ims-card ims-card-hover p-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="ims-stat-icon ims-badge-soft-info">
+                        <i class="bi bi-activity"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">Health & Status</h6>
+                        <small class="text-muted">Verify Django and DB connection</small>
+                    </div>
+                </div>
+                <div class="mt-3 pt-3 border-top">
+                    <a href="{% url 'health_check' %}" class="btn btn-sm btn-outline-info w-100">
+                        Check Health &rarr;
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Phase 1 Architecture Overview -->
+    <div class="card ims-card p-4">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <h5 class="fw-bold mb-0">
+                <i class="bi bi-diagram-3 me-2 text-primary"></i>Phase 1 Modular Architecture
+            </h5>
+            <span class="badge bg-secondary">7 Apps Configured</span>
+        </div>
+        <p class="text-muted small">
+            The foundation for Damak Municipality's Intern Management System is configured with modular architecture ready for Phase 2 implementation:
+        </p>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <div class="p-3 rounded-3 bg-light border">
+                    <strong class="d-block mb-1"><i class="bi bi-shield-lock me-1 text-primary"></i> accounts</strong>
+                    <small class="text-muted">Authentication, supervisor & intern roles, user profiles</small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-3 rounded-3 bg-light border">
+                    <strong class="d-block mb-1"><i class="bi bi-people me-1 text-primary"></i> interns</strong>
+                    <small class="text-muted">Intern registration, department allocation, academic details</small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-3 rounded-3 bg-light border">
+                    <strong class="d-block mb-1"><i class="bi bi-calendar-check me-1 text-primary"></i> attendance</strong>
+                    <small class="text-muted">Daily check-in/out records, attendance reports</small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-3 rounded-3 bg-light border">
+                    <strong class="d-block mb-1"><i class="bi bi-journal-text me-1 text-primary"></i> logbook</strong>
+                    <small class="text-muted">Daily activities, weekly summaries, supervisor verification</small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-3 rounded-3 bg-light border">
+                    <strong class="d-block mb-1"><i class="bi bi-list-task me-1 text-primary"></i> tasks</strong>
+                    <small class="text-muted">Task delegation, submission attachments, milestone tracking</small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-3 rounded-3 bg-light border">
+                    <strong class="d-block mb-1"><i class="bi bi-star me-1 text-primary"></i> evaluations</strong>
+                    <small class="text-muted">Performance rubrics, ratings, completion certifications</small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-3 rounded-3 bg-light border">
+                    <strong class="d-block mb-1"><i class="bi bi-folder2-open me-1 text-primary"></i> documents</strong>
+                    <small class="text-muted">Recommendation letters, municipal agreements, IDs</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,333 @@
+/* Damak Municipality Intern Management System (IMS) - Design System */
+
+:root {
+  --ims-primary: #0f3d68;
+  --ims-primary-dark: #0a2540;
+  --ims-primary-light: #1e5588;
+  --ims-accent: #0284c7;
+  --ims-accent-hover: #0369a1;
+  --ims-success: #10b981;
+  --ims-warning: #f59e0b;
+  --ims-danger: #ef4444;
+  --ims-dark: #0f172a;
+  --ims-light-bg: #f8fafc;
+  --ims-card-bg: #ffffff;
+  --ims-text-main: #1e293b;
+  --ims-text-muted: #64748b;
+  --ims-border: #e2e8f0;
+  --ims-sidebar-width: 260px;
+  --ims-topbar-height: 64px;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background-color: var(--ims-light-bg);
+  color: var(--ims-text-main);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Layout Wrapper */
+.ims-app-wrapper {
+  display: flex;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Sidebar Styles */
+.ims-sidebar {
+  width: var(--ims-sidebar-width);
+  background: linear-gradient(180deg, var(--ims-primary-dark) 0%, var(--ims-primary) 100%);
+  color: #f1f5f9;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1040;
+}
+
+.ims-sidebar-brand {
+  height: var(--ims-topbar-height);
+  padding: 0 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.ims-brand-icon {
+  width: 38px;
+  height: 38px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: #38bdf8;
+}
+
+.ims-brand-text h1 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.ims-brand-text small {
+  font-size: 0.72rem;
+  opacity: 0.8;
+  letter-spacing: 0.02em;
+  display: block;
+}
+
+.ims-nav-section-title {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.45);
+  padding: 1rem 1.25rem 0.4rem;
+  font-weight: 700;
+}
+
+.ims-sidebar-nav {
+  list-style: none;
+  padding: 0.5rem 0.75rem;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.ims-nav-item {
+  margin-bottom: 0.25rem;
+}
+
+.ims-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  color: #cbd5e1;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.ims-nav-link i {
+  font-size: 1.1rem;
+  width: 20px;
+  text-align: center;
+  color: #94a3b8;
+  transition: color 0.2s ease;
+}
+
+.ims-nav-link:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.ims-nav-link:hover i {
+  color: #38bdf8;
+}
+
+.ims-nav-link.active {
+  color: #ffffff;
+  background: var(--ims-accent);
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+}
+
+.ims-nav-link.active i {
+  color: #ffffff;
+}
+
+.ims-sidebar-footer {
+  padding: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.15);
+}
+
+/* Main Area */
+.ims-main-wrapper {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Top Navigation Bar */
+.ims-topbar {
+  height: var(--ims-topbar-height);
+  background: #ffffff;
+  border-bottom: 1px solid var(--ims-border);
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.ims-sidebar-toggle {
+  background: transparent;
+  border: 1px solid var(--ims-border);
+  border-radius: 8px;
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ims-text-main);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.ims-sidebar-toggle:hover {
+  background: #f1f5f9;
+}
+
+/* Content Container */
+.ims-content-body {
+  flex-grow: 1;
+  padding: 1.75rem 1.5rem;
+}
+
+/* Cards & Widgets */
+.ims-card {
+  background: var(--ims-card-bg);
+  border: 1px solid var(--ims-border);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ims-card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.ims-stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+}
+
+.ims-badge-soft-primary {
+  background-color: #e0f2fe;
+  color: #0369a1;
+}
+
+.ims-badge-soft-success {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.ims-badge-soft-warning {
+  background-color: #fef3c7;
+  color: #b45309;
+}
+
+.ims-badge-soft-info {
+  background-color: #e0e7ff;
+  color: #4338ca;
+}
+
+/* Footer */
+.ims-footer {
+  background: #ffffff;
+  border-top: 1px solid var(--ims-border);
+  padding: 1rem 1.5rem;
+  font-size: 0.85rem;
+  color: var(--ims-text-muted);
+}
+
+/* Responsive Mobile Sidebar */
+@media (max-width: 991.98px) {
+  .ims-sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.25);
+  }
+
+  .ims-sidebar.show {
+    transform: translateX(0);
+  }
+
+  .ims-sidebar-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(2px);
+    z-index: 1030;
+    display: none;
+  }
+
+  .ims-sidebar-backdrop.show {
+    display: block;
+  }
+}
+
+/* Phase 2 — Authentication & Role Styles */
+
+/* Disabled sidebar links (coming in future phases) */
+.ims-nav-link.disabled-link {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Login page full-height centering */
+.ims-login-page {
+  min-height: calc(100vh - var(--ims-topbar-height));
+  display: flex;
+  align-items: center;
+}
+
+/* Alert icon colors for message tags */
+.alert-error {
+  --bs-alert-color: #842029;
+  --bs-alert-bg: #f8d7da;
+  --bs-alert-border-color: #f5c2c7;
+}
+
+/* Password strength hint */
+.password-hint {
+  font-size: 0.78rem;
+  color: var(--ims-text-muted);
+  margin-top: 0.35rem;
+}
+
+/* Auth card polish */
+.ims-auth-card {
+  max-width: 440px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.ims-auth-card .card-body {
+  padding: 2rem 2.25rem;
+}
+
+@media (max-width: 480px) {
+  .ims-auth-card .card-body {
+    padding: 1.5rem 1.25rem;
+  }
+}
+

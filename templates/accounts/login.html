@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign In — Damak Municipality IMS{% endblock %}
+
+{% block content %}
+<div class="ims-login-page py-5">
+    <div class="ims-auth-card">
+        <div class="card ims-card shadow-sm border-0">
+            <div class="card-body">
+
+                <!-- Brand Header -->
+                <div class="text-center mb-4">
+                    <div class="mx-auto mb-3 d-flex align-items-center justify-content-center rounded-3"
+                         style="width:56px;height:56px;background:#e0f2fe;">
+                        <i class="bi bi-shield-lock fs-3 text-primary"></i>
+                    </div>
+                    <h2 class="fw-bold mb-1 h4">Welcome Back</h2>
+                    <p class="text-muted small mb-0">
+                        Damak Municipality &bull; Intern Management System
+                    </p>
+                </div>
+
+                <!-- Login Form -->
+                <form method="post" novalidate>
+                    {% csrf_token %}
+
+                    <!-- Non-field errors -->
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger py-2 px-3 mb-3 d-flex align-items-center gap-2" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill flex-shrink-0"></i>
+                            <div class="small">
+                                {% for error in form.non_field_errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label for="{{ form.email.id_for_label }}" class="form-label fw-semibold small">
+                            Email Address
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="bi bi-envelope text-muted"></i>
+                            </span>
+                            {{ form.email }}
+                        </div>
+                        {% if form.email.errors %}
+                            <div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <label for="{{ form.password.id_for_label }}" class="form-label fw-semibold small mb-0">
+                                Password
+                            </label>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="bi bi-key text-muted"></i>
+                            </span>
+                            {{ form.password }}
+                            <button class="btn btn-outline-secondary border-start-0" type="button"
+                                    id="togglePassword" title="Show/Hide password">
+                                <i class="bi bi-eye" id="toggleIcon"></i>
+                            </button>
+                        </div>
+                        {% if form.password.errors %}
+                            <div class="text-danger small mt-1">{{ form.password.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Submit -->
+                    <button type="submit" class="btn btn-primary btn-lg w-100 fw-semibold shadow-sm"
+                            id="loginBtn" style="background-color:var(--ims-primary);">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+                    </button>
+                </form>
+
+                <!-- Dev info box -->
+                <div class="alert alert-light border mt-4 mb-0 small">
+                    <div class="fw-semibold text-dark mb-1">
+                        <i class="bi bi-info-circle me-1 text-primary"></i>Demo Credentials
+                    </div>
+                    <div class="text-muted">
+                        <strong>Supervisor:</strong> supervisor@example.com<br>
+                        <strong>Intern:</strong> intern@example.com<br>
+                        <strong>Password:</strong> DamakIMS@2026
+                    </div>
+                </div>
+
+            </div><!-- /.card-body -->
+        </div><!-- /.card -->
+
+        <div class="text-center mt-3 small text-muted">
+            <a href="{% url 'home' %}" class="text-decoration-none text-muted">
+                <i class="bi bi-arrow-left me-1"></i>Back to Home
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Password show/hide toggle
+    const toggleBtn = document.getElementById('togglePassword');
+    const toggleIcon = document.getElementById('toggleIcon');
+    const passwordInput = document.getElementById('passwordInput');
+    if (toggleBtn && passwordInput) {
+        toggleBtn.addEventListener('click', function () {
+            const isText = passwordInput.type === 'text';
+            passwordInput.type = isText ? 'password' : 'text';
+            toggleIcon.className = isText ? 'bi bi-eye' : 'bi bi-eye-slash';
+        });
+    }
+</script>
+{% endblock %}
