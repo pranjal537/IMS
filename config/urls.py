@@ -19,7 +19,8 @@ urlpatterns = [
     path('dashboard/', accounts_views.dashboard_redirect_view, name='dashboard_redirect'),
     path('supervisor/dashboard/', accounts_views.supervisor_dashboard_view, name='supervisor_dashboard'),
     path('intern/dashboard/', accounts_views.intern_dashboard_view, name='intern_dashboard'),
-    path('password/change/', accounts_views.password_change_view, name='password_change'),
+    path('password-change/', accounts_views.password_change_view, name='password_change'),
+    path('password/change/', accounts_views.password_change_view),
     path('health/', accounts_views.health_view, name='health_check'),
 
     # App namespaced routes

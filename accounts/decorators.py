@@ -12,9 +12,7 @@ Usage:
 """
 
 from functools import wraps
-from django.shortcuts import redirect
-from django.http import HttpResponseForbidden
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect, render
 from django.contrib import messages
 
 
@@ -30,12 +28,7 @@ def supervisor_required(view_func):
             messages.error(request, "Please log in to access this page.")
             return redirect('login')
         if not request.user.is_supervisor:
-            return HttpResponseForbidden(
-                "<h2>403 – Access Denied</h2>"
-                "<p>You do not have permission to access this page. "
-                "This area is reserved for Supervisors only.</p>"
-                "<p><a href='/'>Return to Home</a></p>"
-            )
+            return render(request, '403.html', status=403)
         return view_func(request, *args, **kwargs)
     return _wrapped_view
 
@@ -52,11 +45,6 @@ def intern_required(view_func):
             messages.error(request, "Please log in to access this page.")
             return redirect('login')
         if not request.user.is_intern:
-            return HttpResponseForbidden(
-                "<h2>403 – Access Denied</h2>"
-                "<p>You do not have permission to access this page. "
-                "This area is reserved for Interns only.</p>"
-                "<p><a href='/'>Return to Home</a></p>"
-            )
+            return render(request, '403.html', status=403)
         return view_func(request, *args, **kwargs)
     return _wrapped_view
