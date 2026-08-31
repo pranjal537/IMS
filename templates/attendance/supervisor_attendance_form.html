@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} — Damak Municipality IMS{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card ims-card border-0 shadow-sm">
+                <div class="card-header bg-transparent border-bottom py-3">
+                    <h5 class="fw-bold mb-0 text-dark">{{ title }}</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Select Assigned Intern</label>
+                            {{ form.intern }}
+                            {% if form.intern.errors %}<div class="text-danger small">{{ form.intern.errors.0 }}</div>{% endif %}
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold small">Attendance Date</label>
+                                {{ form.date }}
+                                {% if form.date.errors %}<div class="text-danger small">{{ form.date.errors.0 }}</div>{% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold small">Status</label>
+                                {{ form.status }}
+                                {% if form.status.errors %}<div class="text-danger small">{{ form.status.errors.0 }}</div>{% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold small">Check-in Time (Optional)</label>
+                                {{ form.check_in }}
+                                {% if form.check_in.errors %}<div class="text-danger small">{{ form.check_in.errors.0 }}</div>{% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold small">Check-out Time (Optional)</label>
+                                {{ form.check_out }}
+                                {% if form.check_out.errors %}<div class="text-danger small">{{ form.check_out.errors.0 }}</div>{% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold small">Remarks / Reasons</label>
+                            {{ form.remarks }}
+                            {% if form.remarks.errors %}<div class="text-danger small">{{ form.remarks.errors.0 }}</div>{% endif %}
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="{% url 'supervisor_attendance' %}" class="btn btn-outline-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary px-4 fw-semibold">Save Attendance Record</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

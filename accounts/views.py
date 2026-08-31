@@ -90,11 +90,41 @@ def dashboard_redirect_view(request):
 def supervisor_dashboard_view(request):
     """
     Supervisor-only dashboard.
-    Role enforcement is handled by @supervisor_required decorator.
+    Enforces role access and displays attendance overview for assigned interns.
     """
+    supervisor_profile = getattr(request.user, 'supervisor_profile', None)
+    today = timezone.now().date()
+
+    assigned_count = 0
+    present_today = 0
+    leave_today = 0
+    absent_today = 0
+    today_records = []
+
+    if supervisor_profile:
+        assigned_interns = supervisor_profile.assigned_internships.all()
+        assigned_count = assigned_interns.count()
+
+        from attendance.models import Attendance, AttendanceStatus
+        today_qs = Attendance.objects.filter(
+            intern__internship__supervisor=supervisor_profile,
+            date=today
+        ).select_related('intern', 'intern__user')
+
+        present_today = today_qs.filter(status=AttendanceStatus.PRESENT).count()
+        leave_today = today_qs.filter(status=AttendanceStatus.LEAVE).count()
+        absent_today = today_qs.filter(status=AttendanceStatus.ABSENT).count()
+        today_records = today_qs
+
     context = {
         'page_title': 'Supervisor Dashboard',
         'welcome_name': request.user.get_full_name() or request.user.email,
+        'assigned_count': assigned_count,
+        'present_today': present_today,
+        'leave_today': leave_today,
+        'absent_today': absent_today,
+        'today_records': today_records,
+        'today_date': today,
     }
     return render(request, 'dashboard/supervisor_dashboard.html', context)
 
@@ -105,11 +135,29 @@ def supervisor_dashboard_view(request):
 def intern_dashboard_view(request):
     """
     Intern-only dashboard.
-    Role enforcement is handled by @intern_required decorator.
+    Enforces role access and displays attendance metrics and recent log.
     """
+    intern_profile = getattr(request.user, 'intern_profile', None)
+    today = timezone.now().date()
+
+    stats = None
+    today_record = None
+    recent_records = []
+
+    if intern_profile:
+        from attendance.utils import calculate_intern_attendance_stats
+        from attendance.models import Attendance
+        stats = calculate_intern_attendance_stats(intern_profile)
+        today_record = Attendance.objects.filter(intern=intern_profile, date=today).first()
+        recent_records = Attendance.objects.filter(intern=intern_profile).order_by('-date')[:5]
+
     context = {
         'page_title': 'Intern Dashboard',
         'welcome_name': request.user.get_full_name() or request.user.email,
+        'stats': stats,
+        'today_record': today_record,
+        'recent_records': recent_records,
+        'today_date': today,
     }
     return render(request, 'dashboard/intern_dashboard.html', context)
 

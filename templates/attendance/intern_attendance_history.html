@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}Attendance History — Damak Municipality IMS{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1 small">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'intern_dashboard' %}" class="text-decoration-none">Intern Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Attendance History</li>
+                </ol>
+            </nav>
+            <h2 class="fw-bold mb-0 text-dark">Attendance History</h2>
+            <p class="text-muted small mb-0">Complete log of your daily attendance records.</p>
+        </div>
+        <div>
+            <a href="{% url 'intern_attendance_today' %}" class="btn btn-success btn-sm fw-semibold">
+                <i class="bi bi-clock me-1"></i>Today's Attendance
+            </a>
+        </div>
+    </div>
+
+    <!-- Filter Card -->
+    <div class="card ims-card border-0 shadow-sm mb-4 p-3">
+        <form method="get" class="row g-3 align-items-center">
+            <div class="col-md-5">
+                <label class="form-label small fw-semibold mb-1">Filter by Month</label>
+                <input type="month" name="month" value="{{ selected_month }}" class="form-control">
+            </div>
+            <div class="col-md-5">
+                <label class="form-label small fw-semibold mb-1">Filter by Status</label>
+                <select name="status" class="form-select">
+                    <option value="">All Statuses</option>
+                    {% for val, label in statuses %}
+                        <option value="{{ val }}" {% if selected_status == val %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end gap-1" style="height: 65px;">
+                <button type="submit" class="btn btn-primary w-100"><i class="bi bi-funnel me-1"></i>Filter</button>
+                {% if selected_status or selected_month %}
+                    <a href="{% url 'intern_attendance_history' %}" class="btn btn-outline-secondary" title="Clear Filters"><i class="bi bi-x-lg"></i></a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+    <!-- History Table -->
+    <div class="card ims-card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4">Date</th>
+                            <th>Day</th>
+                            <th>Status</th>
+                            <th>Check-in</th>
+                            <th>Check-out</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in records %}
+                            <tr>
+                                <td class="ps-4 fw-semibold text-dark">{{ record.date|date:"F j, Y" }}</td>
+                                <td class="text-muted small">{{ record.date|date:"l" }}</td>
+                                <td>
+                                    <span class="badge {% if record.status == 'PRESENT' %}bg-success{% elif record.status == 'LEAVE' %}bg-warning text-dark{% else %}bg-danger{% endif %} px-3 py-2">
+                                        {{ record.get_status_display }}
+                                    </span>
+                                </td>
+                                <td class="small">{{ record.check_in|time:"h:i A"|default:"—" }}</td>
+                                <td class="small">{{ record.check_out|time:"h:i A"|default:"—" }}</td>
+                                <td class="text-muted small">{{ record.remarks|default:"—" }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center py-4 text-muted">
+                                    No attendance records found for the selected filter.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

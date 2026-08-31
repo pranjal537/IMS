@@ -62,6 +62,13 @@
                     </a>
                 </li>
                 <li class="ims-nav-item">
+                    <a href="{% url 'supervisor_attendance' %}"
+                       class="ims-nav-link {% if request.resolver_match.url_name == 'supervisor_attendance' or request.resolver_match.url_name == 'supervisor_attendance_create' or request.resolver_match.url_name == 'supervisor_attendance_edit' %}active{% endif %}">
+                        <i class="bi bi-calendar-check"></i>
+                        <span>Attendance</span>
+                    </a>
+                </li>
+                <li class="ims-nav-item">
                     <a href="{% url 'supervisor_profile' %}"
                        class="ims-nav-link {% if request.resolver_match.url_name == 'supervisor_profile' %}active{% endif %}">
                         <i class="bi bi-person-circle"></i>
@@ -80,6 +87,13 @@
                        class="ims-nav-link {% if request.resolver_match.url_name == 'intern_dashboard' %}active{% endif %}">
                         <i class="bi bi-speedometer2"></i>
                         <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="ims-nav-item">
+                    <a href="{% url 'intern_attendance_today' %}"
+                       class="ims-nav-link {% if request.resolver_match.url_name == 'intern_attendance_today' or request.resolver_match.url_name == 'intern_attendance_history' %}active{% endif %}">
+                        <i class="bi bi-calendar-check"></i>
+                        <span>Attendance</span>
                     </a>
                 </li>
                 <li class="ims-nav-item">

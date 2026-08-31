@@ -9,6 +9,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from accounts import views as accounts_views
 from interns import views as interns_views
+from attendance import views as attendance_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,6 +34,15 @@ urlpatterns = [
     path('departments/create/', interns_views.department_create_view, name='department_create'),
     path('departments/<int:pk>/edit/', interns_views.department_edit_view, name='department_edit'),
     path('departments/<int:pk>/delete/', interns_views.department_delete_view, name='department_delete'),
+
+    # Phase 4 Core Attendance Routes
+    path('intern/attendance/', attendance_views.intern_attendance_today_view, name='intern_attendance_today'),
+    path('intern/attendance/mark/', attendance_views.intern_mark_present_view, name='intern_mark_present'),
+    path('intern/attendance/checkout/', attendance_views.intern_checkout_view, name='intern_checkout'),
+    path('intern/attendance/history/', attendance_views.intern_attendance_history_view, name='intern_attendance_history'),
+    path('supervisor/attendance/', attendance_views.supervisor_attendance_list_view, name='supervisor_attendance'),
+    path('supervisor/attendance/create/', attendance_views.supervisor_attendance_create_view, name='supervisor_attendance_create'),
+    path('supervisor/attendance/<int:pk>/edit/', attendance_views.supervisor_attendance_edit_view, name='supervisor_attendance_edit'),
 
     # App namespaced routes
     path('accounts/', include('accounts.urls')),
