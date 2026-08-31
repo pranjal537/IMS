@@ -69,6 +69,13 @@
                     </a>
                 </li>
                 <li class="ims-nav-item">
+                    <a href="{% url 'supervisor_logbook' %}"
+                       class="ims-nav-link {% if request.resolver_match.url_name == 'supervisor_logbook' or request.resolver_match.url_name == 'supervisor_log_detail' %}active{% endif %}">
+                        <i class="bi bi-journal-text"></i>
+                        <span>Daily Logbook</span>
+                    </a>
+                </li>
+                <li class="ims-nav-item">
                     <a href="{% url 'supervisor_profile' %}"
                        class="ims-nav-link {% if request.resolver_match.url_name == 'supervisor_profile' %}active{% endif %}">
                         <i class="bi bi-person-circle"></i>
@@ -94,6 +101,13 @@
                        class="ims-nav-link {% if request.resolver_match.url_name == 'intern_attendance_today' or request.resolver_match.url_name == 'intern_attendance_history' %}active{% endif %}">
                         <i class="bi bi-calendar-check"></i>
                         <span>Attendance</span>
+                    </a>
+                </li>
+                <li class="ims-nav-item">
+                    <a href="{% url 'intern_logbook' %}"
+                       class="ims-nav-link {% if request.resolver_match.url_name == 'intern_logbook' or request.resolver_match.url_name == 'intern_log_create' or request.resolver_match.url_name == 'intern_log_detail' or request.resolver_match.url_name == 'intern_log_edit' %}active{% endif %}">
+                        <i class="bi bi-journal-text"></i>
+                        <span>Daily Logbook</span>
                     </a>
                 </li>
                 <li class="ims-nav-item">
@@ -190,7 +204,7 @@
         <!-- Sidebar Footer -->
         <div class="ims-sidebar-footer mt-auto">
             <div class="d-flex align-items-center justify-content-between text-white-50 small px-2">
-                <span>Phase 2 — Auth</span>
+                <span>Phase 5 — Logbook</span>
                 <span class="badge bg-primary">Django</span>
             </div>
         </div>

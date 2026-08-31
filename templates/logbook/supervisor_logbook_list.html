@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+
+{% block title %}Intern Daily Logbook — Damak Municipality IMS{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+
+    <!-- Page Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1 small">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'supervisor_dashboard' %}" class="text-decoration-none">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Daily Logbook</li>
+                </ol>
+            </nav>
+            <h2 class="fw-bold mb-0 text-dark">Intern Daily Logbook</h2>
+            <p class="text-muted small mb-0">Review and manage daily logs submitted by your assigned interns.</p>
+        </div>
+        <div>
+            <span class="badge bg-warning text-dark px-3 py-2 fs-6">
+                {{ pending_count }} Pending Review{{ pending_count|pluralize }}
+            </span>
+        </div>
+    </div>
+
+    <!-- Filters & Search -->
+    <div class="card ims-card border-0 shadow-sm mb-4">
+        <div class="card-body py-3">
+            <form method="get" id="filter-form" class="row g-2 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label small fw-semibold text-muted mb-1">Search</label>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
+                        <input type="text" name="q" class="form-control" placeholder="Name, ID, title..."
+                               value="{{ search_query }}">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small fw-semibold text-muted mb-1">Intern</label>
+                    <select name="intern" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="">All Assigned Interns</option>
+                        {% for i in assigned_interns %}
+                            <option value="{{ i.intern_id }}" {% if selected_intern == i.intern_id %}selected{% endif %}>
+                                {{ i.user.get_full_name }} ({{ i.intern_id }})
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small fw-semibold text-muted mb-1">Status</label>
+                    <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="">All Statuses</option>
+                        {% for val, label in statuses %}
+                            <option value="{{ val }}" {% if selected_status == val %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small fw-semibold text-muted mb-1">Date</label>
+                    <input type="date" name="date" class="form-control form-control-sm"
+                           value="{{ selected_date }}" onchange="this.form.submit()">
+                </div>
+                <div class="col-md-2 d-flex gap-2">
+                    <button type="submit" class="btn btn-outline-primary btn-sm flex-grow-1">
+                        Filter
+                    </button>
+                    {% if search_query or selected_status or selected_date or selected_intern %}
+                    <a href="{% url 'supervisor_logbook' %}" class="btn btn-outline-secondary btn-sm" title="Clear">
+                        <i class="bi bi-x-lg"></i>
+                    </a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Logbook Table -->
+    <div class="card ims-card border-0 shadow-sm">
+        <div class="card-header bg-transparent border-bottom py-3 d-flex justify-content-between align-items-center">
+            <h6 class="fw-bold mb-0 text-dark">
+                <i class="bi bi-journal-check me-2 text-primary"></i>Intern Daily Logs
+            </h6>
+            <span class="badge bg-secondary">{{ logs|length }} log{{ logs|length|pluralize }} found</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4 py-3">Date</th>
+                            <th>Intern</th>
+                            <th>Activity</th>
+                            <th class="text-center">Hours</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center pe-4">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in logs %}
+                        <tr>
+                            <td class="ps-4 py-3 fw-semibold text-dark small">
+                                {{ log.date|date:"M j, Y" }}
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center fw-bold"
+                                         style="width: 32px; height: 32px; font-size: 0.8rem;">
+                                        {{ log.intern.user.get_initials }}
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold text-dark small">{{ log.intern.user.get_full_name }}</div>
+                                        <div class="text-muted" style="font-size: 0.7rem;">{{ log.intern.intern_id }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="fw-semibold text-dark small">{{ log.title }}</div>
+                                <div class="text-muted text-truncate" style="max-width: 250px; font-size: 0.75rem;">
+                                    {{ log.description }}
+                                </div>
+                            </td>
+                            <td class="text-center small fw-semibold">{{ log.hours_worked }}h</td>
+                            <td class="text-center">
+                                <span class="badge {{ log.get_status_badge_class }}">
+                                    {{ log.get_status_display }}
+                                </span>
+                            </td>
+                            <td class="text-center pe-4">
+                                <a href="{% url 'supervisor_log_detail' pk=log.pk %}"
+                                   class="btn btn-outline-primary btn-sm">
+                                    {% if log.is_pending %}Review{% else %}View{% endif %}
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center py-5">
+                                <i class="bi bi-search fs-2 text-muted d-block mb-2"></i>
+                                <p class="text-muted mb-0">No daily logs found matching your criteria.</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

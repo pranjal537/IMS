@@ -1,6 +1,6 @@
 """
 URL configuration for intern_management project.
-Damak Municipality Intern Management System (IMS) - Phase 2: Auth & Roles.
+Damak Municipality Intern Management System (IMS) - Phase 5: Daily Logbook.
 """
 
 from django.contrib import admin
@@ -10,6 +10,7 @@ from django.conf.urls.static import static
 from accounts import views as accounts_views
 from interns import views as interns_views
 from attendance import views as attendance_views
+from logbook import views as logbook_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -43,6 +44,18 @@ urlpatterns = [
     path('supervisor/attendance/', attendance_views.supervisor_attendance_list_view, name='supervisor_attendance'),
     path('supervisor/attendance/create/', attendance_views.supervisor_attendance_create_view, name='supervisor_attendance_create'),
     path('supervisor/attendance/<int:pk>/edit/', attendance_views.supervisor_attendance_edit_view, name='supervisor_attendance_edit'),
+
+    # Phase 5 Core Logbook Routes (intern)
+    path('intern/logbook/', logbook_views.intern_logbook_list_view, name='intern_logbook'),
+    path('intern/logbook/create/', logbook_views.intern_log_create_view, name='intern_log_create'),
+    path('intern/logbook/<int:pk>/', logbook_views.intern_log_detail_view, name='intern_log_detail'),
+    path('intern/logbook/<int:pk>/edit/', logbook_views.intern_log_edit_view, name='intern_log_edit'),
+
+    # Phase 5 Core Logbook Routes (supervisor)
+    path('supervisor/logbook/', logbook_views.supervisor_logbook_list_view, name='supervisor_logbook'),
+    path('supervisor/logbook/<int:pk>/', logbook_views.supervisor_log_detail_view, name='supervisor_log_detail'),
+    path('supervisor/logbook/<int:pk>/approve/', logbook_views.supervisor_log_approve_view, name='supervisor_log_approve'),
+    path('supervisor/logbook/<int:pk>/reject/', logbook_views.supervisor_log_reject_view, name='supervisor_log_reject'),
 
     # App namespaced routes
     path('accounts/', include('accounts.urls')),

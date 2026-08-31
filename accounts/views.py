@@ -100,6 +100,8 @@ def supervisor_dashboard_view(request):
     leave_today = 0
     absent_today = 0
     today_records = []
+    pending_log_count = 0
+    recent_pending_logs = []
 
     if supervisor_profile:
         assigned_interns = supervisor_profile.assigned_internships.all()
@@ -116,6 +118,17 @@ def supervisor_dashboard_view(request):
         absent_today = today_qs.filter(status=AttendanceStatus.ABSENT).count()
         today_records = today_qs
 
+        # Phase 5: Logbook pending logs for supervisor dashboard
+        from logbook.models import DailyLog, DailyLogStatus
+        pending_log_count = DailyLog.objects.filter(
+            intern__internship__supervisor=supervisor_profile,
+            status=DailyLogStatus.PENDING
+        ).count()
+        recent_pending_logs = DailyLog.objects.filter(
+            intern__internship__supervisor=supervisor_profile,
+            status=DailyLogStatus.PENDING
+        ).select_related('intern', 'intern__user').order_by('-date')[:5]
+
     context = {
         'page_title': 'Supervisor Dashboard',
         'welcome_name': request.user.get_full_name() or request.user.email,
@@ -125,6 +138,8 @@ def supervisor_dashboard_view(request):
         'absent_today': absent_today,
         'today_records': today_records,
         'today_date': today,
+        'pending_log_count': pending_log_count,
+        'recent_pending_logs': recent_pending_logs,
     }
     return render(request, 'dashboard/supervisor_dashboard.html', context)
 
@@ -143,6 +158,8 @@ def intern_dashboard_view(request):
     stats = None
     today_record = None
     recent_records = []
+    log_stats = None
+    latest_log = None
 
     if intern_profile:
         from attendance.utils import calculate_intern_attendance_stats
@@ -151,6 +168,12 @@ def intern_dashboard_view(request):
         today_record = Attendance.objects.filter(intern=intern_profile, date=today).first()
         recent_records = Attendance.objects.filter(intern=intern_profile).order_by('-date')[:5]
 
+        # Phase 5: Logbook stats for intern dashboard
+        from logbook.views import calculate_intern_log_stats
+        from logbook.models import DailyLog
+        log_stats = calculate_intern_log_stats(intern_profile)
+        latest_log = DailyLog.objects.filter(intern=intern_profile).order_by('-date').first()
+
     context = {
         'page_title': 'Intern Dashboard',
         'welcome_name': request.user.get_full_name() or request.user.email,
@@ -158,6 +181,8 @@ def intern_dashboard_view(request):
         'today_record': today_record,
         'recent_records': recent_records,
         'today_date': today,
+        'log_stats': log_stats,
+        'latest_log': latest_log,
     }
     return render(request, 'dashboard/intern_dashboard.html', context)
 

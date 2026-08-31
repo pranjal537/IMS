@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if is_edit %}Edit{% else %}Add{% endif %} Daily Log — Damak Municipality IMS{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+
+    <!-- Page Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1 small">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'intern_logbook' %}" class="text-decoration-none">Daily Logbook</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        {% if is_edit %}Edit Log{% else %}Add Daily Log{% endif %}
+                    </li>
+                </ol>
+            </nav>
+            <h2 class="fw-bold mb-0 text-dark">{{ page_title }}</h2>
+            {% if is_edit and log.is_rejected %}
+            <p class="text-muted small mb-0">
+                <span class="badge bg-danger me-1">Rejected</span>
+                Edit and resubmit this log. It will return to Pending status.
+            </p>
+            {% elif is_edit %}
+            <p class="text-muted small mb-0">Update your pending daily log entry.</p>
+            {% else %}
+            <p class="text-muted small mb-0">Document your work activities for the day.</p>
+            {% endif %}
+        </div>
+        <a href="{% url 'intern_logbook' %}" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1">
+            <i class="bi bi-arrow-left"></i> Back to Logbook
+        </a>
+    </div>
+
+    <div class="row g-4">
+        <!-- Form -->
+        <div class="col-lg-8">
+
+            <!-- Rejection feedback banner -->
+            {% if is_edit and log.is_rejected and log.supervisor_feedback %}
+            <div class="alert alert-danger border-start border-danger border-3 mb-4">
+                <div class="fw-semibold mb-1">
+                    <i class="bi bi-x-circle me-2"></i>Rejection Feedback from Supervisor
+                </div>
+                <p class="mb-0 small">{{ log.supervisor_feedback }}</p>
+                <div class="small text-muted mt-1">
+                    Editing this log and saving will resubmit it for review.
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Attendance warning -->
+            {% if attendance_warning %}
+            <div class="alert alert-warning border-start border-warning border-3 mb-4">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                <strong>Attendance Notice:</strong> You have not marked yourself
+                <strong>Present</strong> for
+                <strong>{{ attendance_warning|date:"F j, Y" }}</strong>.
+                <a href="{% url 'intern_attendance_today' %}" class="alert-link ms-1">Mark attendance →</a>
+            </div>
+            {% endif %}
+
+            <div class="card ims-card border-0 shadow-sm">
+                <div class="card-header bg-transparent border-bottom py-3">
+                    <h6 class="fw-bold mb-0 text-dark">
+                        <i class="bi bi-journal-plus me-2 text-success"></i>
+                        {% if is_edit %}Update Daily Log{% else %}New Daily Log Entry{% endif %}
+                    </h6>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" id="daily-log-form" novalidate>
+                        {% csrf_token %}
+
+                        <!-- Date -->
+                        <div class="mb-4">
+                            <label for="{{ form.date.id_for_label }}" class="form-label fw-semibold">
+                                Date <span class="text-danger">*</span>
+                            </label>
+                            {{ form.date }}
+                            {% if form.date.errors %}
+                                <div class="text-danger small mt-1">{{ form.date.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Activity Title -->
+                        <div class="mb-4">
+                            <label for="{{ form.title.id_for_label }}" class="form-label fw-semibold">
+                                Activity Title <span class="text-danger">*</span>
+                            </label>
+                            {{ form.title }}
+                            {% if form.title.errors %}
+                                <div class="text-danger small mt-1">{{ form.title.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-4">
+                            <label for="{{ form.description.id_for_label }}" class="form-label fw-semibold">
+                                Description / Activities Performed <span class="text-danger">*</span>
+                            </label>
+                            {{ form.description }}
+                            <div class="form-text">Describe what you worked on, what you completed, and any key outcomes.</div>
+                            {% if form.description.errors %}
+                                <div class="text-danger small mt-1">{{ form.description.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Skills Learned -->
+                        <div class="mb-4">
+                            <label for="{{ form.skills_learned.id_for_label }}" class="form-label fw-semibold">
+                                Skills Learned
+                                <span class="text-muted small fw-normal">(optional)</span>
+                            </label>
+                            {{ form.skills_learned }}
+                            {% if form.skills_learned.errors %}
+                                <div class="text-danger small mt-1">{{ form.skills_learned.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Challenges -->
+                        <div class="mb-4">
+                            <label for="{{ form.challenges.id_for_label }}" class="form-label fw-semibold">
+                                Problems / Challenges
+                                <span class="text-muted small fw-normal">(optional)</span>
+                            </label>
+                            {{ form.challenges }}
+                            {% if form.challenges.errors %}
+                                <div class="text-danger small mt-1">{{ form.challenges.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Hours Worked -->
+                        <div class="mb-4">
+                            <label for="{{ form.hours_worked.id_for_label }}" class="form-label fw-semibold">
+                                Hours Worked <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group" style="max-width:200px;">
+                                {{ form.hours_worked }}
+                                <span class="input-group-text">hours</span>
+                            </div>
+                            <div class="form-text">Must be between 0.5 and 24 hours.</div>
+                            {% if form.hours_worked.errors %}
+                                <div class="text-danger small mt-1">{{ form.hours_worked.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Non-field errors -->
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.non_field_errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        <!-- Submit -->
+                        <div class="d-flex gap-3 mt-4">
+                            <button type="submit" id="btn-submit-log" class="btn btn-success fw-semibold px-4">
+                                <i class="bi bi-{% if is_edit %}check-circle{% else %}send{% endif %} me-2"></i>
+                                {% if is_edit and log.is_rejected %}
+                                    Resubmit Log
+                                {% elif is_edit %}
+                                    Update Log
+                                {% else %}
+                                    Submit Daily Log
+                                {% endif %}
+                            </button>
+                            <a href="{% url 'intern_logbook' %}" class="btn btn-outline-secondary px-4">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Sidebar -->
+        <div class="col-lg-4">
+            <div class="card ims-card border-0 shadow-sm mb-4">
+                <div class="card-header bg-transparent border-bottom py-3">
+                    <h6 class="fw-bold mb-0"><i class="bi bi-info-circle me-2 text-primary"></i>Guidelines</h6>
+                </div>
+                <div class="card-body small text-muted">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2">
+                            <i class="bi bi-check2 text-success me-2"></i>
+                            One log entry per day maximum.
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check2 text-success me-2"></i>
+                            Logs must be within your internship period.
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check2 text-success me-2"></i>
+                            No logs for Saturday or Sunday.
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check2 text-success me-2"></i>
+                            Hours must be between 0.5 and 24.
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check2 text-success me-2"></i>
+                            Submitted logs start as <strong>Pending</strong>.
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-arrow-repeat text-primary me-2"></i>
+                            If rejected, you can edit and resubmit.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card ims-card border-0 shadow-sm">
+                <div class="card-header bg-transparent border-bottom py-3">
+                    <h6 class="fw-bold mb-0"><i class="bi bi-diagram-3 me-2 text-warning"></i>Status Flow</h6>
+                </div>
+                <div class="card-body small">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="badge bg-warning text-dark">Pending</span>
+                        <span class="text-muted">→ awaiting review</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="badge bg-success">Approved</span>
+                        <span class="text-muted">→ accepted by supervisor</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="badge bg-danger">Rejected</span>
+                        <span class="text-muted">→ needs revision</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

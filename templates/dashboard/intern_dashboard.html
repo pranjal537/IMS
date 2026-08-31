@@ -154,7 +154,7 @@
                     </div>
                     <div class="d-flex justify-content-between small py-1 border-bottom">
                         <span class="text-muted">Role</span>
-                        <span class="badge bg-success">{{ request.user.get_role_display }}</span>
+                        <span class="badge bg-success">Intern</span>
                     </div>
                     <div class="d-flex justify-content-between small py-1">
                         <span class="text-muted">Status</span>
@@ -169,6 +169,48 @@
                     </a>
                 </div>
             </div>
+
+            <!-- Daily Logbook Card -->
+            <div class="card ims-card border-0 shadow-sm mb-4">
+                <div class="card-header bg-transparent border-bottom py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="fw-bold mb-0 text-dark">
+                        <i class="bi bi-journal-text me-2 text-info"></i>Daily Logbook
+                    </h6>
+                    <span class="badge bg-info text-dark">Total Logs: {{ log_stats.total|default:0 }}</span>
+                </div>
+                <div class="card-body p-0">
+                    {% if latest_log %}
+                    <div class="p-3 border-bottom small">
+                        <div class="text-muted fw-semibold text-uppercase letter-spacing-1 mb-2" style="font-size: 0.7rem;">Latest Log</div>
+                        <div class="d-flex justify-content-between align-items-start mb-1">
+                            <span class="fw-bold text-dark">{{ latest_log.title }}</span>
+                            <span class="text-muted">{{ latest_log.date|date:"M j" }}</span>
+                        </div>
+                        <div class="mb-2 text-muted text-truncate">{{ latest_log.description }}</div>
+                        <div class="d-flex gap-2">
+                            <span class="badge {{ latest_log.get_status_badge_class }}">{{ latest_log.get_status_display }}</span>
+                            <span class="badge bg-light text-dark border">{{ latest_log.hours_worked }}h</span>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="bi bi-journal-x fs-2 text-muted d-block mb-2"></i>
+                        <span class="text-muted small">No logs submitted yet.</span>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer bg-transparent border-top p-0">
+                    <div class="d-flex">
+                        <a href="{% url 'intern_log_create' %}" class="btn btn-link text-decoration-none w-50 py-2 small fw-semibold border-end">
+                            <i class="bi bi-plus-circle me-1"></i> Add Log
+                        </a>
+                        <a href="{% url 'intern_logbook' %}" class="btn btn-link text-decoration-none w-50 py-2 small fw-semibold">
+                            View All <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
