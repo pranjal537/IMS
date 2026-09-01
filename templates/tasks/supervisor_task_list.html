@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="h3">{{ page_title }}</h2>
+    <a href="{% url 'supervisor_task_create' %}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Create Task
+    </a>
+</div>
+
+<div class="card mb-4 shadow-sm">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <input type="text" name="q" class="form-control" placeholder="Search tasks..." value="{{ request.GET.q }}">
+            </div>
+            <div class="col-md-3">
+                <select name="intern" class="form-select">
+                    <option value="">All Assigned Interns</option>
+                    {% for intern in interns %}
+                        <option value="{{ intern.intern_id }}" {% if request.GET.intern == intern.intern_id %}selected{% endif %}>
+                            {{ intern.user.get_full_name }} ({{ intern.intern_id }})
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select name="priority" class="form-select">
+                    <option value="">All Priorities</option>
+                    {% for code, label in priorities %}
+                        <option value="{{ code }}" {% if request.GET.priority == code %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select name="status" class="form-select">
+                    <option value="">All Statuses</option>
+                    {% for code, label in statuses %}
+                        <option value="{{ code }}" {% if request.GET.status == code %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2 d-grid">
+                <button type="submit" class="btn btn-secondary">Filter</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Task</th>
+                        <th>Intern</th>
+                        <th>Priority</th>
+                        <th>Dates</th>
+                        <th>Progress</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in tasks %}
+                    <tr>
+                        <td>
+                            <strong>{{ task.title }}</strong>
+                            <br>
+                            <small class="text-muted text-truncate d-inline-block" style="max-width: 200px;">
+                                {{ task.description }}
+                            </small>
+                        </td>
+                        <td>
+                            {{ task.intern.user.get_full_name }}<br>
+                            <small class="text-muted">{{ task.intern.intern_id }}</small>
+                        </td>
+                        <td>
+                            <span class="badge {{ task.get_priority_badge_class }}">
+                                {{ task.get_priority_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <small>
+                                <strong>Start:</strong> {{ task.start_date|date:"M d, Y" }}<br>
+                                <strong>Due:</strong> <span class="{% if task.is_overdue %}text-danger fw-bold{% endif %}">{{ task.due_date|date:"M d, Y" }}</span>
+                            </small>
+                        </td>
+                        <td style="min-width: 150px;">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <small>{{ task.progress }}%</small>
+                            </div>
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar {% if task.progress == 100 %}bg-success{% endif %}" role="progressbar" style="width: {{ task.progress }}%;" aria-valuenow="{{ task.progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge {{ task.get_status_badge_class }}">
+                                {{ task.get_display_status_display|default:task.display_status }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{% url 'supervisor_task_detail' task.pk %}" class="btn btn-sm btn-outline-primary">View</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center py-4 text-muted">
+                            No tasks found matching the criteria.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

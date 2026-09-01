@@ -129,6 +129,18 @@ def supervisor_dashboard_view(request):
             status=DailyLogStatus.PENDING
         ).select_related('intern', 'intern__user').order_by('-date')[:5]
 
+        # Phase 6: Tasks stats for supervisor dashboard
+        from tasks.models import Task, TaskStatus
+        supervisor_tasks = Task.objects.filter(intern__internship__supervisor=supervisor_profile)
+        task_stats = {
+            'total': supervisor_tasks.count(),
+            'pending': supervisor_tasks.filter(status=TaskStatus.PENDING).count(),
+            'in_progress': supervisor_tasks.filter(status=TaskStatus.IN_PROGRESS).count(),
+            'completed': supervisor_tasks.filter(status=TaskStatus.COMPLETED).count(),
+            'overdue': sum(1 for t in supervisor_tasks if t.is_overdue),
+        }
+        recent_tasks = supervisor_tasks.select_related('intern', 'intern__user').order_by('-created_at')[:5]
+
     context = {
         'page_title': 'Supervisor Dashboard',
         'welcome_name': request.user.get_full_name() or request.user.email,
@@ -140,6 +152,8 @@ def supervisor_dashboard_view(request):
         'today_date': today,
         'pending_log_count': pending_log_count,
         'recent_pending_logs': recent_pending_logs,
+        'task_stats': task_stats if supervisor_profile else None,
+        'recent_tasks': recent_tasks if supervisor_profile else None,
     }
     return render(request, 'dashboard/supervisor_dashboard.html', context)
 
@@ -173,6 +187,18 @@ def intern_dashboard_view(request):
         from logbook.models import DailyLog
         log_stats = calculate_intern_log_stats(intern_profile)
         latest_log = DailyLog.objects.filter(intern=intern_profile).order_by('-date').first()
+        
+        # Phase 6: Tasks stats for intern dashboard
+        from tasks.models import Task, TaskStatus
+        intern_tasks = Task.objects.filter(intern=intern_profile)
+        task_stats = {
+            'total': intern_tasks.count(),
+            'pending': intern_tasks.filter(status=TaskStatus.PENDING).count(),
+            'in_progress': intern_tasks.filter(status=TaskStatus.IN_PROGRESS).count(),
+            'completed': intern_tasks.filter(status=TaskStatus.COMPLETED).count(),
+            'overdue': sum(1 for t in intern_tasks if t.is_overdue),
+        }
+        recent_tasks = intern_tasks.order_by('-created_at')[:5]
 
     context = {
         'page_title': 'Intern Dashboard',
@@ -183,6 +209,8 @@ def intern_dashboard_view(request):
         'today_date': today,
         'log_stats': log_stats,
         'latest_log': latest_log,
+        'task_stats': task_stats if intern_profile else None,
+        'recent_tasks': recent_tasks if intern_profile else None,
     }
     return render(request, 'dashboard/intern_dashboard.html', context)
 

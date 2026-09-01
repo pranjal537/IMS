@@ -60,8 +60,96 @@
         </div>
     </div>
 
-    <!-- Future modules placeholder -->
-    <div class="row g-4">
+    <!-- Tasks Summary & Recent Tasks -->
+    <div class="row g-4 mb-4">
+        <div class="col-lg-12">
+            <div class="card ims-card border-0 shadow-sm h-100">
+                <div class="card-header bg-transparent border-bottom py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="fw-bold mb-0 text-dark">
+                        <i class="bi bi-list-task me-2 text-primary"></i>Tasks Overview
+                    </h6>
+                    <a href="{% url 'supervisor_task_list' %}" class="btn btn-sm btn-outline-primary">View All Tasks</a>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3 mb-4 text-center">
+                        <div class="col">
+                            <div class="p-2 border rounded bg-light">
+                                <small class="text-muted d-block">Total Tasks</small>
+                                <span class="fs-4 fw-bold text-dark">{{ task_stats.total }}</span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="p-2 border rounded bg-secondary bg-opacity-10">
+                                <small class="text-secondary d-block fw-semibold">Pending</small>
+                                <span class="fs-4 fw-bold text-secondary">{{ task_stats.pending }}</span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="p-2 border rounded bg-primary bg-opacity-10">
+                                <small class="text-primary d-block fw-semibold">In Progress</small>
+                                <span class="fs-4 fw-bold text-primary">{{ task_stats.in_progress }}</span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="p-2 border rounded bg-success bg-opacity-10">
+                                <small class="text-success d-block fw-semibold">Completed</small>
+                                <span class="fs-4 fw-bold text-success">{{ task_stats.completed }}</span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="p-2 border rounded bg-danger bg-opacity-10">
+                                <small class="text-danger d-block fw-semibold">Overdue</small>
+                                <span class="fs-4 fw-bold text-danger">{{ task_stats.overdue }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0 small">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th>Task</th>
+                                    <th>Intern</th>
+                                    <th>Due Date</th>
+                                    <th>Progress</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for task in recent_tasks %}
+                                    <tr>
+                                        <td class="fw-semibold">
+                                            <a href="{% url 'supervisor_task_detail' task.pk %}" class="text-decoration-none">{{ task.title }}</a>
+                                        </td>
+                                        <td>{{ task.intern.user.get_full_name }}</td>
+                                        <td><span class="{% if task.is_overdue %}text-danger fw-bold{% endif %}">{{ task.due_date|date:"M j, Y" }}</span></td>
+                                        <td>
+                                            <div class="progress" style="height: 6px; width: 60px;">
+                                                <div class="progress-bar {% if task.progress == 100 %}bg-success{% endif %}" role="progressbar" style="width: {{ task.progress }}%;" aria-valuenow="{{ task.progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                            <small>{{ task.progress }}%</small>
+                                        </td>
+                                        <td>
+                                            <span class="badge {{ task.get_status_badge_class }}">
+                                                {{ task.get_display_status_display|default:task.display_status }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="5" class="text-center text-muted py-3">
+                                            No active tasks found.
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Today's Attendance Summary Row -->
     <div class="row g-4 mb-4">
         <div class="col-lg-8">

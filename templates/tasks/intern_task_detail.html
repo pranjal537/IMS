@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="h3">{{ page_title }}</h2>
+            <a href="{% url 'intern_task_list' %}" class="btn btn-outline-secondary">Back to Tasks</a>
+        </div>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-sm-4 text-muted fw-bold">Title</div>
+                    <div class="col-sm-8">{{ task.title }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4 text-muted fw-bold">Description</div>
+                    <div class="col-sm-8 text-break" style="white-space: pre-wrap;">{{ task.description }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4 text-muted fw-bold">Priority</div>
+                    <div class="col-sm-8">
+                        <span class="badge {{ task.get_priority_badge_class }}">{{ task.get_priority_display }}</span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-4 text-muted fw-bold">Dates</div>
+                    <div class="col-sm-8">
+                        {{ task.start_date|date:"M d, Y" }} — <span class="{% if task.is_overdue %}text-danger fw-bold{% endif %}">{{ task.due_date|date:"M d, Y" }}</span>
+                    </div>
+                </div>
+                {% if task.supervisor_comment %}
+                <div class="row mb-3">
+                    <div class="col-sm-4 text-muted fw-bold">Supervisor Comment</div>
+                    <div class="col-sm-8 p-3 bg-light rounded text-break" style="white-space: pre-wrap;">{{ task.supervisor_comment }}</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-white fw-bold">Update Progress</div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-sm-4">
+                            <label for="{{ form.progress.id_for_label }}" class="form-label fw-bold m-0">Progress (%)</label>
+                        </div>
+                        <div class="col-sm-8">
+                            {{ form.progress }}
+                            {% if form.progress.errors %}
+                                <div class="text-danger small mt-1">{{ form.progress.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-sm-4">
+                            <label for="{{ form.status.id_for_label }}" class="form-label fw-bold m-0">Status</label>
+                        </div>
+                        <div class="col-sm-8">
+                            {{ form.status }}
+                            {% if form.status.errors %}
+                                <div class="text-danger small mt-1">{{ form.status.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <button type="submit" class="btn btn-primary">Update Progress</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

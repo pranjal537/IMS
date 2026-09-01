@@ -11,6 +11,7 @@ from accounts import views as accounts_views
 from interns import views as interns_views
 from attendance import views as attendance_views
 from logbook import views as logbook_views
+from tasks import views as tasks_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -56,6 +57,17 @@ urlpatterns = [
     path('supervisor/logbook/<int:pk>/', logbook_views.supervisor_log_detail_view, name='supervisor_log_detail'),
     path('supervisor/logbook/<int:pk>/approve/', logbook_views.supervisor_log_approve_view, name='supervisor_log_approve'),
     path('supervisor/logbook/<int:pk>/reject/', logbook_views.supervisor_log_reject_view, name='supervisor_log_reject'),
+
+    # Phase 6 Core Tasks Routes (intern)
+    path('intern/tasks/', tasks_views.intern_task_list_view, name='intern_task_list'),
+    path('intern/tasks/<int:pk>/', tasks_views.intern_task_detail_view, name='intern_task_detail'),
+    path('intern/tasks/<int:pk>/update/', tasks_views.intern_task_detail_view, name='intern_task_update'), # detail view handles POST
+
+    # Phase 6 Core Tasks Routes (supervisor)
+    path('supervisor/tasks/', tasks_views.supervisor_task_list_view, name='supervisor_task_list'),
+    path('supervisor/tasks/create/', tasks_views.supervisor_task_create_view, name='supervisor_task_create'),
+    path('supervisor/tasks/<int:pk>/', tasks_views.supervisor_task_detail_view, name='supervisor_task_detail'),
+    path('supervisor/tasks/<int:pk>/edit/', tasks_views.supervisor_task_edit_view, name='supervisor_task_edit'),
 
     # App namespaced routes
     path('accounts/', include('accounts.urls')),
