@@ -37,6 +37,7 @@ class TaskManagementTests(TestCase):
             intern=self.intern,
             supervisor=self.supervisor,
             department=self.dept,
+            position='Test Intern',
             start_date=timezone.now().date(),
             expected_end_date=timezone.now().date() + timedelta(days=90)
         )
@@ -44,6 +45,7 @@ class TaskManagementTests(TestCase):
             intern=self.intern2,
             supervisor=self.other_sup_profile,
             department=self.dept,
+            position='Test Intern',
             start_date=timezone.now().date(),
             expected_end_date=timezone.now().date() + timedelta(days=90)
         )
