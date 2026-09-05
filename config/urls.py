@@ -75,6 +75,8 @@ urlpatterns = [
     path('attendance/', include('attendance.urls')),
     path('logbook/', include('logbook.urls')),
     path('tasks/', include('tasks.urls')),
+    
+    # Phase 7 Core Evaluations Routes
     path('evaluations/', include('evaluations.urls')),
     path('documents/', include('documents.urls')),
 ]

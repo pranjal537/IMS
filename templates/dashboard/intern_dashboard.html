@@ -303,6 +303,30 @@
                 </div>
             </div>
 
+            <!-- Evaluation Card -->
+            <div class="card ims-card border-0 shadow-sm mb-4">
+                <div class="card-header bg-transparent border-bottom py-3">
+                    <h6 class="fw-bold mb-0 text-dark">
+                        <i class="bi bi-award me-2 text-success"></i>Evaluation Status
+                    </h6>
+                </div>
+                <div class="card-body text-center p-4">
+                    {% if evaluation %}
+                        <div class="display-4 fw-bold text-success mb-2">{{ evaluation.overall_score }}</div>
+                        <div class="text-muted small mb-3">Overall Score</div>
+                        <span class="badge bg-success">{{ evaluation.get_final_recommendation_display }}</span>
+                    {% else %}
+                        <i class="bi bi-clock-history text-muted mb-2" style="font-size: 2rem;"></i>
+                        <p class="text-muted small mb-0">Pending evaluation</p>
+                    {% endif %}
+                </div>
+                <div class="card-footer bg-transparent border-top p-0">
+                    <a href="{% url 'evaluations:intern_progress' %}" class="btn btn-link text-decoration-none text-success w-100 py-2 small fw-semibold">
+                        View Progress Report <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+
         </div>
     </div>
 

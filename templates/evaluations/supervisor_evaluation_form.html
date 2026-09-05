@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+
+{% block title %}Evaluate: {{ internship.intern.user.get_full_name }} — Damak Municipality IMS{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1 small">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'evaluations:supervisor_evaluation_list' %}" class="text-decoration-none">Intern Evaluations</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Evaluate Intern</li>
+                </ol>
+            </nav>
+            <h2 class="fw-bold mb-0 text-dark">Evaluate Intern</h2>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card ims-card border-0 shadow-sm mb-4">
+                <div class="card-header bg-transparent border-bottom py-3">
+                    <h6 class="fw-bold mb-0"><i class="bi bi-person-badge me-2 text-primary"></i>Intern Information</h6>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <div class="rounded-circle bg-primary bg-opacity-10 text-primary fw-bold d-flex align-items-center justify-content-center mx-auto mb-2"
+                             style="width:80px;height:80px;font-size:2rem;">
+                            {{ internship.intern.user.get_initials }}
+                        </div>
+                        <h5 class="fw-bold mb-0">{{ internship.intern.user.get_full_name }}</h5>
+                        <p class="text-muted small mb-0">{{ internship.intern.intern_id }}</p>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between small py-2 border-bottom">
+                        <span class="text-muted">Department</span>
+                        <span class="fw-semibold">{{ internship.department.name }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between small py-2 border-bottom">
+                        <span class="text-muted">Position</span>
+                        <span class="fw-semibold">{{ internship.position }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between small py-2">
+                        <span class="text-muted">Duration</span>
+                        <span class="fw-semibold">
+                            {{ internship.start_date|date:"M j, Y" }} - 
+                            {{ internship.expected_end_date|date:"M j, Y" }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            {% if progress_context %}
+            <div class="card ims-card border-0 shadow-sm mb-4">
+                <div class="card-header bg-transparent border-bottom py-3">
+                    <h6 class="fw-bold mb-0"><i class="bi bi-graph-up me-2 text-success"></i>Performance Context</h6>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush small">
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                            <span class="text-muted"><i class="bi bi-list-task me-2"></i>Tasks Completed</span>
+                            <span class="badge bg-primary rounded-pill">{{ progress_context.completed_tasks }} / {{ progress_context.total_tasks }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                            <span class="text-muted"><i class="bi bi-journal-text me-2"></i>Logs Approved</span>
+                            <span class="badge bg-success rounded-pill">{{ progress_context.approved_logs }} / {{ progress_context.total_logs }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card ims-card border-0 shadow-sm mb-4">
+                <div class="card-header bg-transparent border-bottom py-3">
+                    <h6 class="fw-bold mb-0"><i class="bi bi-clipboard-check me-2 text-primary"></i>Evaluation Form</h6>
+                </div>
+                <div class="card-body">
+                    {% if form.errors %}
+                        <div class="alert alert-danger small">
+                            Please correct the errors below.
+                            {{ form.errors }}
+                        </div>
+                    {% endif %}
+
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            <h6 class="fw-bold text-dark mb-3 pb-2 border-bottom">Ratings (1 = Poor, 5 = Excellent)</h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="{{ form.technical_skills.id_for_label }}" class="form-label small fw-semibold text-muted">Technical Skills</label>
+                                    {{ form.technical_skills }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="{{ form.communication.id_for_label }}" class="form-label small fw-semibold text-muted">Communication</label>
+                                    {{ form.communication }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="{{ form.punctuality.id_for_label }}" class="form-label small fw-semibold text-muted">Punctuality</label>
+                                    {{ form.punctuality }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="{{ form.problem_solving.id_for_label }}" class="form-label small fw-semibold text-muted">Problem Solving</label>
+                                    {{ form.problem_solving }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="{{ form.professionalism.id_for_label }}" class="form-label small fw-semibold text-muted">Professionalism</label>
+                                    {{ form.professionalism }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="{{ form.work_quality.id_for_label }}" class="form-label small fw-semibold text-muted">Work Quality</label>
+                                    {{ form.work_quality }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="{{ form.learning_ability.id_for_label }}" class="form-label small fw-semibold text-muted">Learning Ability</label>
+                                    {{ form.learning_ability }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="{{ form.discipline.id_for_label }}" class="form-label small fw-semibold text-muted">Discipline</label>
+                                    {{ form.discipline }}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h6 class="fw-bold text-dark mb-3 pb-2 border-bottom">Comments</h6>
+                            <div class="mb-3">
+                                <label for="{{ form.strengths.id_for_label }}" class="form-label small fw-semibold text-muted">Key Strengths</label>
+                                {{ form.strengths }}
+                            </div>
+                            <div class="mb-3">
+                                <label for="{{ form.improvement_areas.id_for_label }}" class="form-label small fw-semibold text-muted">Areas for Improvement</label>
+                                {{ form.improvement_areas }}
+                            </div>
+                            <div class="mb-3">
+                                <label for="{{ form.overall_comments.id_for_label }}" class="form-label small fw-semibold text-muted">Overall Comments</label>
+                                {{ form.overall_comments }}
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6 class="fw-bold text-dark mb-3 pb-2 border-bottom">Conclusion</h6>
+                            <div class="mb-3">
+                                <label for="{{ form.final_recommendation.id_for_label }}" class="form-label small fw-semibold text-muted">Final Recommendation</label>
+                                {{ form.final_recommendation }}
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{% url 'evaluations:supervisor_evaluation_list' %}" class="btn btn-outline-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Save Evaluation</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

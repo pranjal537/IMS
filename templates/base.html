@@ -76,6 +76,20 @@
                     </a>
                 </li>
                 <li class="ims-nav-item">
+                    <a href="{% url 'supervisor_task_list' %}"
+                       class="ims-nav-link {% if 'supervisor/tasks' in request.path %}active{% endif %}">
+                        <i class="bi bi-list-task"></i>
+                        <span>Tasks</span>
+                    </a>
+                </li>
+                <li class="ims-nav-item">
+                    <a href="{% url 'evaluations:supervisor_evaluation_list' %}"
+                       class="ims-nav-link {% if 'supervisor/evaluations' in request.path %}active{% endif %}">
+                        <i class="bi bi-star-half"></i>
+                        <span>Evaluations</span>
+                    </a>
+                </li>
+                <li class="ims-nav-item">
                     <a href="{% url 'supervisor_profile' %}"
                        class="ims-nav-link {% if request.resolver_match.url_name == 'supervisor_profile' %}active{% endif %}">
                         <i class="bi bi-person-circle"></i>
@@ -115,6 +129,27 @@
                        class="ims-nav-link {% if request.resolver_match.url_name == 'intern_my_internship' %}active{% endif %}">
                         <i class="bi bi-briefcase"></i>
                         <span>My Internship</span>
+                    </a>
+                </li>
+                <li class="ims-nav-item">
+                    <a href="{% url 'intern_task_list' %}"
+                       class="ims-nav-link {% if 'intern/tasks' in request.path %}active{% endif %}">
+                        <i class="bi bi-list-task"></i>
+                        <span>Tasks</span>
+                    </a>
+                </li>
+                <li class="ims-nav-item">
+                    <a href="{% url 'evaluations:intern_evaluation_detail' %}"
+                       class="ims-nav-link {% if 'intern/evaluation' in request.path %}active{% endif %}">
+                        <i class="bi bi-star-half"></i>
+                        <span>Evaluation</span>
+                    </a>
+                </li>
+                <li class="ims-nav-item">
+                    <a href="{% url 'evaluations:intern_progress' %}"
+                       class="ims-nav-link {% if 'intern/progress' in request.path %}active{% endif %}">
+                        <i class="bi bi-graph-up"></i>
+                        <span>Progress</span>
                     </a>
                 </li>
                 <li class="ims-nav-item">

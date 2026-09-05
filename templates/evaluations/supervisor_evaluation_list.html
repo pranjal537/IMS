@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}Intern Evaluations — Damak Municipality IMS{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1 small">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Intern Evaluations</li>
+                </ol>
+            </nav>
+            <h2 class="fw-bold mb-0 text-dark">Intern Evaluations</h2>
+        </div>
+    </div>
+
+    <div class="card ims-card border-0 shadow-sm">
+        <div class="card-header bg-transparent border-bottom py-3">
+            <h6 class="fw-bold mb-0 text-dark">
+                <i class="bi bi-star-half me-2 text-primary"></i>Assigned Interns
+            </h6>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>Intern Name</th>
+                            <th>Department</th>
+                            <th>Position</th>
+                            <th>Evaluation Status</th>
+                            <th>Overall Score</th>
+                            <th>Recommendation</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for internship in internships %}
+                            <tr>
+                                <td class="fw-semibold">
+                                    {{ internship.intern.user.get_full_name }}<br>
+                                    <small class="text-muted">{{ internship.intern.intern_id }}</small>
+                                </td>
+                                <td>{{ internship.department.name }}</td>
+                                <td>{{ internship.position }}</td>
+                                <td>
+                                    {% if internship.evaluation %}
+                                        <span class="badge bg-success">Evaluated</span>
+                                    {% else %}
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if internship.evaluation %}
+                                        <strong>{{ internship.evaluation.overall_score }}</strong> / 5.0
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if internship.evaluation %}
+                                        {{ internship.evaluation.get_final_recommendation_display }}
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    {% if internship.evaluation %}
+                                        <a href="{% url 'evaluations:supervisor_evaluation_detail' internship.evaluation.pk %}" class="btn btn-sm btn-outline-primary">
+                                            View
+                                        </a>
+                                    {% else %}
+                                        <a href="{% url 'evaluations:supervisor_evaluation_create' internship.pk %}" class="btn btn-sm btn-primary">
+                                            Evaluate
+                                        </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center text-muted py-4">
+                                    You have no assigned interns to evaluate.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

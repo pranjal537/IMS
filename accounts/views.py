@@ -141,6 +141,15 @@ def supervisor_dashboard_view(request):
         }
         recent_tasks = supervisor_tasks.select_related('intern', 'intern__user').order_by('-created_at')[:5]
 
+        # Phase 7: Evaluations stats for supervisor dashboard
+        from evaluations.models import Evaluation
+        evaluated_interns = Evaluation.objects.filter(internship__supervisor=supervisor_profile).count()
+        unevaluated_interns = assigned_count - evaluated_interns
+        evaluation_stats = {
+            'evaluated': evaluated_interns,
+            'unevaluated': unevaluated_interns
+        }
+
     context = {
         'page_title': 'Supervisor Dashboard',
         'welcome_name': request.user.get_full_name() or request.user.email,
@@ -154,6 +163,7 @@ def supervisor_dashboard_view(request):
         'recent_pending_logs': recent_pending_logs,
         'task_stats': task_stats if supervisor_profile else None,
         'recent_tasks': recent_tasks if supervisor_profile else None,
+        'evaluation_stats': evaluation_stats if supervisor_profile else None,
     }
     return render(request, 'dashboard/supervisor_dashboard.html', context)
 
@@ -200,6 +210,13 @@ def intern_dashboard_view(request):
         }
         recent_tasks = intern_tasks.order_by('-created_at')[:5]
 
+        # Phase 7: Evaluation stats for intern dashboard
+        from evaluations.models import Evaluation
+        try:
+            evaluation = intern_profile.internship.evaluation
+        except Exception:
+            evaluation = None
+
     context = {
         'page_title': 'Intern Dashboard',
         'welcome_name': request.user.get_full_name() or request.user.email,
@@ -211,6 +228,7 @@ def intern_dashboard_view(request):
         'latest_log': latest_log,
         'task_stats': task_stats if intern_profile else None,
         'recent_tasks': recent_tasks if intern_profile else None,
+        'evaluation': evaluation if intern_profile else None,
     }
     return render(request, 'dashboard/intern_dashboard.html', context)
 

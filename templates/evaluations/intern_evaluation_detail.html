@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+
+{% block title %}My Evaluation — Damak Municipality IMS{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1 small">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'intern_dashboard' %}" class="text-decoration-none">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">My Evaluation</li>
+                </ol>
+            </nav>
+            <h2 class="fw-bold mb-0 text-dark">My Evaluation</h2>
+        </div>
+    </div>
+
+    {% if evaluation %}
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card ims-card border-0 shadow-sm mb-4">
+                <div class="card-header bg-transparent border-bottom py-3">
+                    <h6 class="fw-bold mb-0"><i class="bi bi-award me-2 text-success"></i>Evaluation Summary</h6>
+                </div>
+                <div class="card-body text-center p-4">
+                    <h6 class="text-muted fw-bold text-uppercase mb-3">Overall Score</h6>
+                    <div class="display-3 fw-bold text-success mb-2">{{ evaluation.overall_score }}</div>
+                    <div class="text-muted small mb-3">Out of 5.0</div>
+                    
+                    <h6 class="text-muted fw-bold text-uppercase mb-2 mt-4">Final Recommendation</h6>
+                    <span class="badge bg-success fs-6 px-3 py-2">
+                        {{ evaluation.get_final_recommendation_display }}
+                    </span>
+                </div>
+                <div class="card-footer bg-transparent border-top py-3 text-muted small text-center">
+                    Evaluated by: {{ internship.supervisor.user.get_full_name }}<br>
+                    Date: {{ evaluation.updated_at|date:"F j, Y" }}
+                </div>
+            </div>
+            
+            <div class="d-grid gap-2">
+                <a href="{% url 'evaluations:intern_progress' %}" class="btn btn-outline-success">
+                    <i class="bi bi-graph-up me-1"></i> View Full Progress Report
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card ims-card border-0 shadow-sm mb-4">
+                <div class="card-header bg-transparent border-bottom py-3">
+                    <h6 class="fw-bold mb-0"><i class="bi bi-star me-2 text-success"></i>Performance Ratings</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="small fw-semibold text-dark">Technical Skills</span>
+                                    <span class="small fw-bold text-success">{{ evaluation.technical_skills }} / 5</span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: {% widthratio evaluation.technical_skills 5 100 %}%;" aria-valuenow="{{ evaluation.technical_skills }}" aria-valuemin="0" aria-valuemax="5"></div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="small fw-semibold text-dark">Communication</span>
+                                    <span class="small fw-bold text-success">{{ evaluation.communication }} / 5</span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: {% widthratio evaluation.communication 5 100 %}%;" aria-valuenow="{{ evaluation.communication }}" aria-valuemin="0" aria-valuemax="5"></div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="small fw-semibold text-dark">Punctuality</span>
+                                    <span class="small fw-bold text-success">{{ evaluation.punctuality }} / 5</span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: {% widthratio evaluation.punctuality 5 100 %}%;" aria-valuenow="{{ evaluation.punctuality }}" aria-valuemin="0" aria-valuemax="5"></div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="small fw-semibold text-dark">Problem Solving</span>
+                                    <span class="small fw-bold text-success">{{ evaluation.problem_solving }} / 5</span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: {% widthratio evaluation.problem_solving 5 100 %}%;" aria-valuenow="{{ evaluation.problem_solving }}" aria-valuemin="0" aria-valuemax="5"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="small fw-semibold text-dark">Professionalism</span>
+                                    <span class="small fw-bold text-success">{{ evaluation.professionalism }} / 5</span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: {% widthratio evaluation.professionalism 5 100 %}%;" aria-valuenow="{{ evaluation.professionalism }}" aria-valuemin="0" aria-valuemax="5"></div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="small fw-semibold text-dark">Work Quality</span>
+                                    <span class="small fw-bold text-success">{{ evaluation.work_quality }} / 5</span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: {% widthratio evaluation.work_quality 5 100 %}%;" aria-valuenow="{{ evaluation.work_quality }}" aria-valuemin="0" aria-valuemax="5"></div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="small fw-semibold text-dark">Learning Ability</span>
+                                    <span class="small fw-bold text-success">{{ evaluation.learning_ability }} / 5</span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: {% widthratio evaluation.learning_ability 5 100 %}%;" aria-valuenow="{{ evaluation.learning_ability }}" aria-valuemin="0" aria-valuemax="5"></div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="small fw-semibold text-dark">Discipline</span>
+                                    <span class="small fw-bold text-success">{{ evaluation.discipline }} / 5</span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: {% widthratio evaluation.discipline 5 100 %}%;" aria-valuenow="{{ evaluation.discipline }}" aria-valuemin="0" aria-valuemax="5"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card ims-card border-0 shadow-sm mb-4">
+                <div class="card-header bg-transparent border-bottom py-3">
+                    <h6 class="fw-bold mb-0"><i class="bi bi-chat-left-text me-2 text-success"></i>Comments & Feedback</h6>
+                </div>
+                <div class="card-body">
+                    {% if evaluation.strengths %}
+                    <div class="mb-4">
+                        <h6 class="fw-bold text-dark mb-2">Key Strengths</h6>
+                        <div class="p-3 bg-light rounded-3 text-muted small">
+                            {{ evaluation.strengths|linebreaksbr }}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if evaluation.improvement_areas %}
+                    <div class="mb-4">
+                        <h6 class="fw-bold text-dark mb-2">Areas for Improvement</h6>
+                        <div class="p-3 bg-light rounded-3 text-muted small">
+                            {{ evaluation.improvement_areas|linebreaksbr }}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if evaluation.overall_comments %}
+                    <div>
+                        <h6 class="fw-bold text-dark mb-2">Overall Comments</h6>
+                        <div class="p-3 bg-light rounded-3 text-muted small">
+                            {{ evaluation.overall_comments|linebreaksbr }}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="card ims-card border-0 shadow-sm text-center py-5">
+        <div class="card-body">
+            <i class="bi bi-clock-history text-muted mb-3" style="font-size: 3rem;"></i>
+            <h4 class="fw-bold text-dark mb-2">Evaluation Pending</h4>
+            <p class="text-muted mx-auto mb-4" style="max-width: 500px;">
+                Your supervisor has not completed your evaluation yet. Evaluations are typically conducted near the end of your internship period.
+            </p>
+            <a href="{% url 'evaluations:intern_progress' %}" class="btn btn-success">
+                <i class="bi bi-graph-up me-1"></i> View Current Progress
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -297,6 +297,32 @@
                 </div>
             </div>
 
+            <!-- Evaluations Summary Card -->
+            <div class="card ims-card border-0 shadow-sm mb-4">
+                <div class="card-header bg-transparent border-bottom py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="fw-bold mb-0 text-dark">
+                        <i class="bi bi-star-half me-2 text-primary"></i>Evaluations
+                    </h6>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush small">
+                        <div class="list-group-item d-flex justify-content-between align-items-center py-3">
+                            <span class="text-muted fw-semibold">Evaluated Interns</span>
+                            <span class="badge bg-success rounded-pill">{{ evaluation_stats.evaluated }}</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center py-3">
+                            <span class="text-muted fw-semibold">Pending Evaluations</span>
+                            <span class="badge bg-warning text-dark rounded-pill">{{ evaluation_stats.unevaluated }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-top p-0">
+                    <a href="{% url 'evaluations:supervisor_evaluation_list' %}" class="btn btn-link text-decoration-none w-100 py-2 small fw-semibold">
+                        Manage Evaluations <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+
         </div>
     </div>
 
