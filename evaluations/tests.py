@@ -51,10 +51,14 @@ class EvaluationTests(TestCase):
         )
         
         # Test Data for Progress
+        past_working_day = today - timedelta(days=1)
+        while past_working_day.weekday() >= 5:
+            past_working_day -= timedelta(days=1)
+        
         # Attendance
-        Attendance.objects.create(intern=self.intern1, date=today - timedelta(days=1), status=AttendanceStatus.PRESENT)
+        Attendance.objects.create(intern=self.intern1, date=past_working_day, status=AttendanceStatus.PRESENT)
         # Logbook
-        DailyLog.objects.create(intern=self.intern1, date=today - timedelta(days=1), title="Log", description="Log description", hours_worked=8, status=DailyLogStatus.APPROVED)
+        DailyLog.objects.create(intern=self.intern1, date=past_working_day, title="Log", description="Log description", hours_worked=8, status=DailyLogStatus.APPROVED)
         # Tasks
         Task.objects.create(
             intern=self.intern1,
