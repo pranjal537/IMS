@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}Upload Document — Damak Municipality IMS{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0" style="max-width: 800px;">
+    <div class="mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-1 small">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'documents:document_list' %}" class="text-decoration-none">Documents</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Upload Document</li>
+            </ol>
+        </nav>
+        <h2 class="fw-bold mb-0 text-dark">Upload Document</h2>
+        <p class="text-muted small">Upload official identity documents, transcripts, letters, or project files (Max 10 MB).</p>
+    </div>
+
+    <div class="card ims-card border-0 shadow-sm">
+        <div class="card-header bg-transparent border-bottom py-3">
+            <h6 class="fw-bold mb-0 text-dark">
+                <i class="bi bi-cloud-upload me-2 text-primary"></i>Document Upload Form
+            </h6>
+        </div>
+        <div class="card-body p-4">
+            <form method="post" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger mb-4">
+                    {% for error in form.non_field_errors %}
+                        <div><i class="bi bi-exclamation-triangle-fill me-2"></i>{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% if is_supervisor_view and form.intern %}
+                <div class="mb-3">
+                    <label for="{{ form.intern.id_for_label }}" class="form-label fw-semibold">
+                        Select Intern <span class="text-danger">*</span>
+                    </label>
+                    {{ form.intern }}
+                    {% if form.intern.errors %}
+                    <div class="invalid-feedback d-block">
+                        {% for error in form.intern.errors %}{{ error }}{% endfor %}
+                    </div>
+                    {% endif %}
+                    <div class="form-text">Choose the assigned intern this document belongs to.</div>
+                </div>
+                {% endif %}
+
+                <div class="mb-3">
+                    <label for="{{ form.title.id_for_label }}" class="form-label fw-semibold">
+                        Document Title <span class="text-danger">*</span>
+                    </label>
+                    {{ form.title }}
+                    {% if form.title.errors %}
+                    <div class="invalid-feedback d-block">
+                        {% for error in form.title.errors %}{{ error }}{% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label for="{{ form.category.id_for_label }}" class="form-label fw-semibold">
+                        Document Category <span class="text-danger">*</span>
+                    </label>
+                    {{ form.category }}
+                    {% if form.category.errors %}
+                    <div class="invalid-feedback d-block">
+                        {% for error in form.category.errors %}{{ error }}{% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label for="{{ form.file.id_for_label }}" class="form-label fw-semibold">
+                        Select File <span class="text-danger">*</span>
+                    </label>
+                    {{ form.file }}
+                    {% if form.file.errors %}
+                    <div class="invalid-feedback d-block">
+                        {% for error in form.file.errors %}{{ error }}{% endfor %}
+                    </div>
+                    {% endif %}
+                    <div class="form-text">Allowed formats: PDF, DOC, DOCX, JPG, JPEG, PNG. Maximum file size: 10 MB.</div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="{{ form.description.id_for_label }}" class="form-label fw-semibold">
+                        Description / Notes
+                    </label>
+                    {{ form.description }}
+                    {% if form.description.errors %}
+                    <div class="invalid-feedback d-block">
+                        {% for error in form.description.errors %}{{ error }}{% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 pt-2 border-top">
+                    <a href="{% url 'documents:document_list' %}" class="btn btn-outline-secondary">
+                        Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary d-inline-flex align-items-center gap-2">
+                        <i class="bi bi-cloud-upload"></i>
+                        <span>Upload Document</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

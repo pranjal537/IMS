@@ -90,6 +90,13 @@
                     </a>
                 </li>
                 <li class="ims-nav-item">
+                    <a href="{% url 'documents:document_list' %}"
+                       class="ims-nav-link {% if 'documents' in request.path %}active{% endif %}">
+                        <i class="bi bi-folder2-open"></i>
+                        <span>Documents</span>
+                    </a>
+                </li>
+                <li class="ims-nav-item">
                     <a href="{% url 'supervisor_profile' %}"
                        class="ims-nav-link {% if request.resolver_match.url_name == 'supervisor_profile' %}active{% endif %}">
                         <i class="bi bi-person-circle"></i>
@@ -150,6 +157,13 @@
                        class="ims-nav-link {% if 'intern/progress' in request.path %}active{% endif %}">
                         <i class="bi bi-graph-up"></i>
                         <span>Progress</span>
+                    </a>
+                </li>
+                <li class="ims-nav-item">
+                    <a href="{% url 'documents:document_list' %}"
+                       class="ims-nav-link {% if 'documents' in request.path %}active{% endif %}">
+                        <i class="bi bi-folder2-open"></i>
+                        <span>Documents</span>
                     </a>
                 </li>
                 <li class="ims-nav-item">

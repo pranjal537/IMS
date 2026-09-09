@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+
+{% block title %}Documents — Damak Municipality IMS{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1 small">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Documents</li>
+                </ol>
+            </nav>
+            <h2 class="fw-bold mb-0 text-dark">
+                {% if is_supervisor_view %}
+                    Assigned Intern Documents
+                {% else %}
+                    My Documents
+                {% endif %}
+            </h2>
+        </div>
+        <div>
+            <a href="{% url 'documents:document_upload' %}" class="btn btn-primary d-inline-flex align-items-center gap-2">
+                <i class="bi bi-cloud-upload"></i>
+                <span>Upload Document</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Filters Section -->
+    <div class="card ims-card border-0 shadow-sm mb-4">
+        <div class="card-body py-3">
+            <form method="get" class="row g-3 align-items-center">
+                {% if is_supervisor_view %}
+                <div class="col-md-5">
+                    <label for="intern" class="form-label small fw-semibold text-muted mb-1">Filter by Intern</label>
+                    <select name="intern" id="intern" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="">All Assigned Interns</option>
+                        {% for intern in assigned_interns %}
+                            <option value="{{ intern.pk }}" {% if selected_intern == intern.pk %}selected{% endif %}>
+                                {{ intern.user.get_full_name }} ({{ intern.intern_id }})
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endif %}
+
+                <div class="{% if is_supervisor_view %}col-md-5{% else %}col-md-10{% endif %}">
+                    <label for="category" class="form-label small fw-semibold text-muted mb-1">Filter by Category</label>
+                    <select name="category" id="category" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="">All Categories</option>
+                        {% for code, label in categories %}
+                            <option value="{{ code }}" {% if selected_category == code %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-2 d-flex align-items-end mt-4">
+                    <a href="{% url 'documents:document_list' %}" class="btn btn-outline-secondary btn-sm w-100">
+                        Reset Filters
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Documents List Table -->
+    <div class="card ims-card border-0 shadow-sm">
+        <div class="card-header bg-transparent border-bottom py-3 d-flex justify-content-between align-items-center">
+            <h6 class="fw-bold mb-0 text-dark">
+                <i class="bi bi-file-earmark-text me-2 text-primary"></i>Uploaded Documents ({{ documents|length }})
+            </h6>
+        </div>
+        <div class="card-body p-0">
+            {% if documents %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>Document Title</th>
+                            <th>Category</th>
+                            {% if is_supervisor_view %}
+                            <th>Intern</th>
+                            {% endif %}
+                            <th>File Type</th>
+                            <th>Uploaded By</th>
+                            <th>Upload Date</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for doc in documents %}
+                        <tr>
+                            <td>
+                                <div class="fw-semibold text-dark">{{ doc.title }}</div>
+                                {% if doc.description %}
+                                <small class="text-muted text-truncate d-block" style="max-width: 280px;" title="{{ doc.description }}">
+                                    {{ doc.description }}
+                                </small>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge bg-light text-dark border">
+                                    {{ doc.get_category_display }}
+                                </span>
+                            </td>
+                            {% if is_supervisor_view %}
+                            <td>
+                                <div class="fw-semibold text-dark">{{ doc.intern.user.get_full_name }}</div>
+                                <small class="text-muted">{{ doc.intern.intern_id }}</small>
+                            </td>
+                            {% endif %}
+                            <td>
+                                <span class="badge 
+                                    {% if doc.extension == 'pdf' %}bg-danger
+                                    {% elif doc.extension == 'doc' or doc.extension == 'docx' %}bg-primary
+                                    {% elif doc.extension == 'jpg' or doc.extension == 'jpeg' or doc.extension == 'png' %}bg-success
+                                    {% else %}bg-secondary{% endif %}">
+                                    {{ doc.extension|upper }}
+                                </span>
+                            </td>
+                            <td>
+                                <small class="text-dark">{{ doc.uploaded_by.get_full_name|default:doc.uploaded_by.email }}</small>
+                            </td>
+                            <td>
+                                <small class="text-muted">{{ doc.uploaded_at|date:"M d, Y, h:i A" }}</small>
+                            </td>
+                            <td class="text-end">
+                                <div class="d-inline-flex gap-2">
+                                    <a href="{% url 'documents:document_download' doc.pk %}" 
+                                       class="btn btn-sm btn-outline-primary" 
+                                       title="Secure Download">
+                                        <i class="bi bi-download me-1"></i>Download
+                                    </a>
+
+                                    <form method="post" action="{% url 'documents:document_delete' doc.pk %}" 
+                                          onsubmit="return confirm('Are you sure you want to delete this document? This action cannot be undone.');"
+                                          class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete Document">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="p-5 text-center text-muted">
+                <i class="bi bi-folder-x display-4 mb-3 d-block text-secondary"></i>
+                <h5>No Documents Found</h5>
+                <p class="mb-3">No uploaded documents match your filter criteria.</p>
+                <a href="{% url 'documents:document_upload' %}" class="btn btn-primary btn-sm">
+                    <i class="bi bi-cloud-upload me-1"></i>Upload First Document
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
