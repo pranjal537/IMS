@@ -19,11 +19,16 @@
             <a href="{% url 'evaluations:supervisor_evaluation_edit' evaluation.pk %}" class="btn btn-sm btn-primary d-flex align-items-center gap-1">
                 <i class="bi bi-pencil"></i> Edit Evaluation
             </a>
+            <a href="{% url 'evaluations:supervisor_evaluation_list' %}" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1">
+                <i class="bi bi-arrow-left"></i> All Evaluations
+            </a>
         </div>
     </div>
 
     <div class="row g-4">
+        <!-- Intern & Score Column -->
         <div class="col-lg-4">
+            <!-- Intern Info -->
             <div class="card ims-card border-0 shadow-sm mb-4">
                 <div class="card-header bg-transparent border-bottom py-3">
                     <h6 class="fw-bold mb-0"><i class="bi bi-person-badge me-2 text-primary"></i>Intern Information</h6>
@@ -31,13 +36,13 @@
                 <div class="card-body">
                     <div class="text-center mb-3">
                         <div class="rounded-circle bg-primary bg-opacity-10 text-primary fw-bold d-flex align-items-center justify-content-center mx-auto mb-2"
-                             style="width:80px;height:80px;font-size:2rem;">
+                             style="width:72px;height:72px;font-size:1.8rem;">
                             {{ evaluation.internship.intern.user.get_initials }}
                         </div>
                         <h5 class="fw-bold mb-0">{{ evaluation.internship.intern.user.get_full_name }}</h5>
                         <p class="text-muted small mb-0">{{ evaluation.internship.intern.intern_id }}</p>
                     </div>
-                    <hr>
+                    <hr class="my-2">
                     <div class="d-flex justify-content-between small py-2 border-bottom">
                         <span class="text-muted">Department</span>
                         <span class="fw-semibold">{{ evaluation.internship.department.name }}</span>
@@ -56,6 +61,7 @@
                 </div>
             </div>
             
+            <!-- Score Card -->
             <div class="card ims-card border-0 shadow-sm mb-4">
                 <div class="card-body text-center p-4">
                     <h6 class="text-muted fw-bold text-uppercase mb-3">Overall Score</h6>
@@ -68,8 +74,21 @@
                     </span>
                 </div>
             </div>
+
+            <!-- Radar Chart Card -->
+            <div class="card ims-card border-0 shadow-sm mb-4">
+                <div class="card-header bg-transparent border-bottom py-3">
+                    <h6 class="fw-bold mb-0"><i class="bi bi-diagram-3 me-2 text-primary"></i>Skills Radar</h6>
+                </div>
+                <div class="card-body d-flex align-items-center justify-content-center p-3">
+                    <div class="ims-chart-container" style="max-height: 280px; width: 100%;">
+                        <canvas id="skillsRadarChart"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
 
+        <!-- Performance Ratings Column -->
         <div class="col-lg-8">
             <div class="card ims-card border-0 shadow-sm mb-4">
                 <div class="card-header bg-transparent border-bottom py-3">
@@ -157,6 +176,7 @@
                 </div>
             </div>
 
+            <!-- Comments & Feedback Card -->
             <div class="card ims-card border-0 shadow-sm mb-4">
                 <div class="card-header bg-transparent border-bottom py-3">
                     <h6 class="fw-bold mb-0"><i class="bi bi-chat-left-text me-2 text-primary"></i>Comments & Feedback</h6>
@@ -196,4 +216,59 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const ctx = document.getElementById('skillsRadarChart');
+    if (ctx) {
+        new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: [
+                    'Tech Skills', 'Comm.', 'Punctual', 'Problem Solv.',
+                    'Prof.', 'Quality', 'Learning', 'Discipline'
+                ],
+                datasets: [{
+                    label: 'Rating (out of 5)',
+                    data: [
+                        {{ evaluation.technical_skills|default:0 }},
+                        {{ evaluation.communication|default:0 }},
+                        {{ evaluation.punctuality|default:0 }},
+                        {{ evaluation.problem_solving|default:0 }},
+                        {{ evaluation.professionalism|default:0 }},
+                        {{ evaluation.work_quality|default:0 }},
+                        {{ evaluation.learning_ability|default:0 }},
+                        {{ evaluation.discipline|default:0 }}
+                    ],
+                    fill: true,
+                    backgroundColor: 'rgba(15, 61, 104, 0.2)',
+                    borderColor: '#0f3d68',
+                    pointBackgroundColor: '#0f3d68',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: '#0f3d68'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(0,0,0,0.08)' },
+                        grid: { color: 'rgba(0,0,0,0.08)' },
+                        suggestedMin: 0,
+                        suggestedMax: 5,
+                        ticks: { stepSize: 1, display: false }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    }
+});
+</script>
 {% endblock %}

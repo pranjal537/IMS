@@ -1,85 +1,135 @@
 {% extends 'base.html' %}
 
+{% block title %}Task: {{ task.title }} — Damak Municipality IMS{% endblock %}
+
 {% block content %}
-<div class="row">
-    <div class="col-md-8 mx-auto">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="h3">{{ page_title }}</h2>
-            <a href="{% url 'intern_task_list' %}" class="btn btn-outline-secondary">Back to Tasks</a>
-        </div>
-
-        <div class="card shadow-sm mb-4">
-            <div class="card-body">
-                <div class="row mb-3">
-                    <div class="col-sm-4 text-muted fw-bold">Title</div>
-                    <div class="col-sm-8">{{ task.title }}</div>
+<div class="container-fluid px-0">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <!-- Header & Breadcrumbs -->
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+                <div>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-1 small">
+                            <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Home</a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'intern_task_list' %}" class="text-decoration-none">My Tasks</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">{{ task.title|truncatechars:25 }}</li>
+                        </ol>
+                    </nav>
+                    <h2 class="fw-bold mb-0 text-dark">{{ page_title|default:"Task Details" }}</h2>
                 </div>
-                <div class="row mb-3">
-                    <div class="col-sm-4 text-muted fw-bold">Description</div>
-                    <div class="col-sm-8 text-break" style="white-space: pre-wrap;">{{ task.description }}</div>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'intern_task_list' %}" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1">
+                        <i class="bi bi-arrow-left"></i> Back to Tasks
+                    </a>
                 </div>
-                <div class="row mb-3">
-                    <div class="col-sm-4 text-muted fw-bold">Priority</div>
-                    <div class="col-sm-8">
-                        <span class="badge {{ task.get_priority_badge_class }}">{{ task.get_priority_display }}</span>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-sm-4 text-muted fw-bold">Dates</div>
-                    <div class="col-sm-8">
-                        {{ task.start_date|date:"M d, Y" }} — <span class="{% if task.is_overdue %}text-danger fw-bold{% endif %}">{{ task.due_date|date:"M d, Y" }}</span>
-                    </div>
-                </div>
-                {% if task.supervisor_comment %}
-                <div class="row mb-3">
-                    <div class="col-sm-4 text-muted fw-bold">Supervisor Comment</div>
-                    <div class="col-sm-8 p-3 bg-light rounded text-break" style="white-space: pre-wrap;">{{ task.supervisor_comment }}</div>
-                </div>
-                {% endif %}
             </div>
-        </div>
 
-        <div class="card shadow-sm">
-            <div class="card-header bg-white fw-bold">Update Progress</div>
-            <div class="card-body">
-                <form method="post">
-                    {% csrf_token %}
-                    
-                    {% if form.non_field_errors %}
-                    <div class="alert alert-danger">
-                        {% for error in form.non_field_errors %}
-                            {{ error }}
-                        {% endfor %}
+            <!-- Task Info Card -->
+            <div class="card ims-card border-0 shadow-sm mb-4">
+                <div class="card-header bg-transparent border-bottom py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="fw-bold mb-0 text-dark">
+                        <i class="bi bi-list-task me-2 text-success"></i>Task Information
+                    </h6>
+                    <span class="badge {{ task.get_status_badge_class }}">
+                        {{ task.get_display_status_display|default:task.display_status }}
+                    </span>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row mb-3 pb-3 border-bottom">
+                        <div class="col-sm-3 text-muted fw-semibold small text-uppercase">Title</div>
+                        <div class="col-sm-9 fw-bold fs-5 text-dark">{{ task.title }}</div>
+                    </div>
+                    <div class="row mb-3 pb-3 border-bottom">
+                        <div class="col-sm-3 text-muted fw-semibold small text-uppercase">Description</div>
+                        <div class="col-sm-9 text-dark" style="white-space: pre-wrap; line-height: 1.6;">{{ task.description }}</div>
+                    </div>
+                    <div class="row mb-3 pb-3 border-bottom">
+                        <div class="col-sm-3 text-muted fw-semibold small text-uppercase">Priority</div>
+                        <div class="col-sm-9">
+                            <span class="badge {{ task.get_priority_badge_class }}">{{ task.get_priority_display }}</span>
+                        </div>
+                    </div>
+                    <div class="row mb-3 pb-3 border-bottom">
+                        <div class="col-sm-3 text-muted fw-semibold small text-uppercase">Timeline</div>
+                        <div class="col-sm-9 text-dark">
+                            {{ task.start_date|date:"M d, Y" }} — <span class="{% if task.is_overdue %}text-danger fw-bold{% endif %}">{{ task.due_date|date:"M d, Y" }}</span>
+                            {% if task.is_overdue %}
+                                <span class="badge bg-danger ms-2">Overdue</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row mb-3 pb-3 border-bottom">
+                        <div class="col-sm-3 text-muted fw-semibold small text-uppercase">Current Progress</div>
+                        <div class="col-sm-9">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="progress flex-grow-1" style="height: 10px;">
+                                    <div class="progress-bar {% if task.progress == 100 %}bg-success{% endif %}" role="progressbar" style="width: {{ task.progress }}%;" aria-valuenow="{{ task.progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <span class="fw-bold small text-dark">{{ task.progress }}%</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% if task.supervisor_comment %}
+                    <div class="row mb-2">
+                        <div class="col-sm-3 text-muted fw-semibold small text-uppercase">Supervisor Comment</div>
+                        <div class="col-sm-9">
+                            <div class="p-3 bg-light rounded-3 text-dark border small" style="white-space: pre-wrap;">{{ task.supervisor_comment }}</div>
+                        </div>
                     </div>
                     {% endif %}
+                </div>
+            </div>
 
-                    <div class="row mb-3 align-items-center">
-                        <div class="col-sm-4">
-                            <label for="{{ form.progress.id_for_label }}" class="form-label fw-bold m-0">Progress (%)</label>
+            <!-- Update Progress Form Card -->
+            <div class="card ims-card border-0 shadow-sm mb-4">
+                <div class="card-header bg-transparent border-bottom py-3">
+                    <h6 class="fw-bold mb-0 text-dark">
+                        <i class="bi bi-pencil-square me-2 text-primary"></i>Update Task Progress
+                    </h6>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
                         </div>
-                        <div class="col-sm-8">
-                            {{ form.progress }}
-                            {% if form.progress.errors %}
-                                <div class="text-danger small mt-1">{{ form.progress.errors.0 }}</div>
-                            {% endif %}
+                        {% endif %}
+
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-sm-3">
+                                <label for="{{ form.progress.id_for_label }}" class="form-label fw-semibold small text-uppercase text-muted m-0">Progress (%)</label>
+                            </div>
+                            <div class="col-sm-9">
+                                {{ form.progress }}
+                                {% if form.progress.errors %}
+                                    <div class="text-danger small mt-1">{{ form.progress.errors.0 }}</div>
+                                {% endif %}
+                            </div>
                         </div>
-                    </div>
-                    <div class="row mb-3 align-items-center">
-                        <div class="col-sm-4">
-                            <label for="{{ form.status.id_for_label }}" class="form-label fw-bold m-0">Status</label>
+                        <div class="row mb-4 align-items-center">
+                            <div class="col-sm-3">
+                                <label for="{{ form.status.id_for_label }}" class="form-label fw-semibold small text-uppercase text-muted m-0">Status</label>
+                            </div>
+                            <div class="col-sm-9">
+                                {{ form.status }}
+                                {% if form.status.errors %}
+                                    <div class="text-danger small mt-1">{{ form.status.errors.0 }}</div>
+                                {% endif %}
+                            </div>
                         </div>
-                        <div class="col-sm-8">
-                            {{ form.status }}
-                            {% if form.status.errors %}
-                                <div class="text-danger small mt-1">{{ form.status.errors.0 }}</div>
-                            {% endif %}
+                        
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="bi bi-check-lg me-1"></i> Update Progress
+                            </button>
                         </div>
-                    </div>
-                    
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                        <button type="submit" class="btn btn-primary">Update Progress</button>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

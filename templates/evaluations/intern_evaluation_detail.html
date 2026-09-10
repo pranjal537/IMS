@@ -19,6 +19,7 @@
 
     {% if evaluation %}
     <div class="row g-4">
+        <!-- Summary Column -->
         <div class="col-lg-4">
             <div class="card ims-card border-0 shadow-sm mb-4">
                 <div class="card-header bg-transparent border-bottom py-3">
@@ -35,8 +36,20 @@
                     </span>
                 </div>
                 <div class="card-footer bg-transparent border-top py-3 text-muted small text-center">
-                    Evaluated by: {{ internship.supervisor.user.get_full_name }}<br>
+                    Evaluated by: <strong>{{ internship.supervisor.user.get_full_name }}</strong><br>
                     Date: {{ evaluation.updated_at|date:"F j, Y" }}
+                </div>
+            </div>
+
+            <!-- Radar Chart Card -->
+            <div class="card ims-card border-0 shadow-sm mb-4">
+                <div class="card-header bg-transparent border-bottom py-3">
+                    <h6 class="fw-bold mb-0"><i class="bi bi-diagram-3 me-2 text-success"></i>Skills Radar</h6>
+                </div>
+                <div class="card-body d-flex align-items-center justify-content-center p-3">
+                    <div class="ims-chart-container" style="max-height: 280px; width: 100%;">
+                        <canvas id="skillsRadarChart"></canvas>
+                    </div>
                 </div>
             </div>
             
@@ -47,6 +60,7 @@
             </div>
         </div>
 
+        <!-- Performance Ratings Column -->
         <div class="col-lg-8">
             <div class="card ims-card border-0 shadow-sm mb-4">
                 <div class="card-header bg-transparent border-bottom py-3">
@@ -134,6 +148,7 @@
                 </div>
             </div>
 
+            <!-- Feedback Card -->
             <div class="card ims-card border-0 shadow-sm mb-4">
                 <div class="card-header bg-transparent border-bottom py-3">
                     <h6 class="fw-bold mb-0"><i class="bi bi-chat-left-text me-2 text-success"></i>Comments & Feedback</h6>
@@ -184,4 +199,61 @@
     </div>
     {% endif %}
 </div>
+{% endblock %}
+
+{% block extra_js %}
+{% if evaluation %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const ctx = document.getElementById('skillsRadarChart');
+    if (ctx) {
+        new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: [
+                    'Tech Skills', 'Comm.', 'Punctual', 'Problem Solv.',
+                    'Prof.', 'Quality', 'Learning', 'Discipline'
+                ],
+                datasets: [{
+                    label: 'Rating (out of 5)',
+                    data: [
+                        {{ evaluation.technical_skills|default:0 }},
+                        {{ evaluation.communication|default:0 }},
+                        {{ evaluation.punctuality|default:0 }},
+                        {{ evaluation.problem_solving|default:0 }},
+                        {{ evaluation.professionalism|default:0 }},
+                        {{ evaluation.work_quality|default:0 }},
+                        {{ evaluation.learning_ability|default:0 }},
+                        {{ evaluation.discipline|default:0 }}
+                    ],
+                    fill: true,
+                    backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                    borderColor: '#10b981',
+                    pointBackgroundColor: '#10b981',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: '#10b981'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(0,0,0,0.08)' },
+                        grid: { color: 'rgba(0,0,0,0.08)' },
+                        suggestedMin: 0,
+                        suggestedMax: 5,
+                        ticks: { stepSize: 1, display: false }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    }
+});
+</script>
+{% endif %}
 {% endblock %}

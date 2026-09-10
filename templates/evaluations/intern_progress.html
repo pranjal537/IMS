@@ -19,9 +19,13 @@
             <a href="{% url 'evaluations:intern_evaluation_detail' %}" class="btn btn-sm btn-outline-success d-flex align-items-center gap-1">
                 <i class="bi bi-award"></i> View Evaluation
             </a>
+            <a href="{% url 'intern_dashboard' %}" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1">
+                <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
         </div>
     </div>
 
+    <!-- 4 KPI Progress Cards -->
     <div class="row g-4 mb-4">
         <!-- Time Progress -->
         <div class="col-md-6 col-lg-3">
@@ -101,37 +105,56 @@
     </div>
     
     <div class="row g-4">
+        <!-- Task Progress Breakdown -->
         <div class="col-lg-6">
             <div class="card ims-card border-0 shadow-sm mb-4 h-100">
                 <div class="card-header bg-transparent border-bottom py-3">
                     <h6 class="fw-bold mb-0"><i class="bi bi-bar-chart me-2 text-success"></i>Task Progress Breakdown</h6>
                 </div>
-                <div class="card-body d-flex flex-column justify-content-center align-items-center p-5">
-                    <div class="display-1 fw-bold text-dark mb-2">{{ task_stats.avg_progress }}%</div>
+                <div class="card-body d-flex flex-column justify-content-center align-items-center p-4">
+                    <div class="display-1 fw-bold text-dark mb-1">{{ task_stats.avg_progress }}%</div>
                     <div class="text-muted text-uppercase fw-bold letter-spacing-1 small mb-4">Average Task Completion</div>
                     
-                    <div class="w-100 px-4">
+                    <div class="w-100 px-3 mb-4">
                         <div class="progress" style="height: 12px; border-radius: 6px;">
                             <div class="progress-bar bg-success" role="progressbar" style="width: {{ task_stats.avg_progress }}%;" aria-valuenow="{{ task_stats.avg_progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+
+                    <div class="w-100 bg-light rounded-3 p-3 text-center border">
+                        <div class="row g-0">
+                            <div class="col-4 border-end">
+                                <div class="fs-5 fw-bold text-secondary">{{ task_stats.pending }}</div>
+                                <div class="small text-muted">Pending</div>
+                            </div>
+                            <div class="col-4 border-end">
+                                <div class="fs-5 fw-bold text-primary">{{ task_stats.in_progress }}</div>
+                                <div class="small text-muted">In Progress</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="fs-5 fw-bold text-success">{{ task_stats.completed }}</div>
+                                <div class="small text-muted">Completed</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         
+        <!-- Hours Logged -->
         <div class="col-lg-6">
             <div class="card ims-card border-0 shadow-sm mb-4 h-100">
                 <div class="card-header bg-transparent border-bottom py-3">
                     <h6 class="fw-bold mb-0"><i class="bi bi-clock-history me-2 text-primary"></i>Hours Logged</h6>
                 </div>
-                <div class="card-body d-flex flex-column justify-content-center align-items-center p-5">
-                    <div class="display-1 fw-bold text-primary mb-2">{{ log_stats.total_hours }}</div>
+                <div class="card-body d-flex flex-column justify-content-center align-items-center p-4">
+                    <div class="display-1 fw-bold text-primary mb-1">{{ log_stats.total_hours }}</div>
                     <div class="text-muted text-uppercase fw-bold letter-spacing-1 small mb-4">Total Approved Hours</div>
                     
                     <div class="w-100 bg-light rounded-3 p-3 text-center border">
                         <div class="row g-0">
                             <div class="col-4 border-end">
-                                <div class="fs-5 fw-bold text-dark">{{ log_stats.approved }}</div>
+                                <div class="fs-5 fw-bold text-success">{{ log_stats.approved }}</div>
                                 <div class="small text-muted">Approved Logs</div>
                             </div>
                             <div class="col-4 border-end">

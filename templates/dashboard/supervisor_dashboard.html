@@ -16,185 +16,173 @@
             </nav>
             <h2 class="fw-bold mb-0 text-dark">Supervisor Dashboard</h2>
             <p class="text-muted small mb-0">
-                Welcome back, <strong>{{ welcome_name }}</strong>
+                Welcome back, <strong>{{ welcome_name }}</strong> &bull;
+                <span class="text-muted">{{ today_date|date:"l, F j, Y" }}</span>
             </p>
         </div>
         <div class="d-flex gap-2">
-            <a href="{% url 'health_check' %}" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1">
-                <i class="bi bi-heart-pulse"></i> System Health
+            <a href="{% url 'supervisor_my_interns' %}" class="btn btn-sm btn-primary d-flex align-items-center gap-1">
+                <i class="bi bi-people"></i> My Interns
             </a>
-            <a href="{% url 'password_change' %}" class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1">
-                <i class="bi bi-key"></i> Change Password
+            <a href="{% url 'supervisor_attendance' %}" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1">
+                <i class="bi bi-calendar-check"></i> Attendance
             </a>
         </div>
     </div>
 
-    <!-- Welcome card -->
-    <div class="card ims-card border-0 mb-4 p-4"
+    <!-- Welcome Hero Card -->
+    <div class="card ims-card border-0 mb-4 overflow-hidden"
          style="background: linear-gradient(135deg, #0a2540 0%, #0f3d68 60%, #0284c7 100%);">
-        <div class="row align-items-center">
-            <div class="col-md-8">
-                <div class="d-flex align-items-center gap-3 mb-2">
-                    <div class="rounded-circle bg-white bg-opacity-20 text-white fw-bold d-flex align-items-center justify-content-center"
-                         style="width:52px;height:52px;font-size:1.2rem;">
-                        {{ request.user.get_initials }}
-                    </div>
-                    <div>
-                        <h4 class="text-white fw-bold mb-0">{{ request.user.get_full_name }}</h4>
-                        <span class="badge bg-white text-primary px-2">Supervisor</span>
-                    </div>
-                </div>
-                <p class="text-white-50 mb-3 small">
-                    <i class="bi bi-envelope me-1"></i>{{ request.user.email }}
-                    &bull;
-                    <i class="bi bi-calendar3 me-1"></i>Joined {{ request.user.date_joined|date:"N j, Y" }}
-                </p>
-            </div>
-            <div class="col-md-4 text-md-end mt-3 mt-md-0 d-none d-md-block">
-                <div class="bg-white bg-opacity-10 p-3 rounded-3 border border-white border-opacity-25">
-                    <i class="bi bi-person-workspace fs-2 text-info d-block mb-1"></i>
-                    <div class="text-white small fw-semibold">Supervisor Portal</div>
-                    <div class="text-white-50 small">Phase 2 — Authentication Active</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Tasks Summary & Recent Tasks -->
-    <div class="row g-4 mb-4">
-        <div class="col-lg-12">
-            <div class="card ims-card border-0 shadow-sm h-100">
-                <div class="card-header bg-transparent border-bottom py-3 d-flex justify-content-between align-items-center">
-                    <h6 class="fw-bold mb-0 text-dark">
-                        <i class="bi bi-list-task me-2 text-primary"></i>Tasks Overview
-                    </h6>
-                    <a href="{% url 'supervisor_task_list' %}" class="btn btn-sm btn-outline-primary">View All Tasks</a>
-                </div>
-                <div class="card-body">
-                    <div class="row g-3 mb-4 text-center">
-                        <div class="col">
-                            <div class="p-2 border rounded bg-light">
-                                <small class="text-muted d-block">Total Tasks</small>
-                                <span class="fs-4 fw-bold text-dark">{{ task_stats.total }}</span>
-                            </div>
+        <div class="card-body p-4">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center gap-3 mb-2">
+                        <div class="rounded-circle bg-white bg-opacity-20 text-white fw-bold d-flex align-items-center justify-content-center flex-shrink-0"
+                             style="width:52px;height:52px;font-size:1.2rem;" aria-hidden="true">
+                            {{ request.user.get_initials }}
                         </div>
-                        <div class="col">
-                            <div class="p-2 border rounded bg-secondary bg-opacity-10">
-                                <small class="text-secondary d-block fw-semibold">Pending</small>
-                                <span class="fs-4 fw-bold text-secondary">{{ task_stats.pending }}</span>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="p-2 border rounded bg-primary bg-opacity-10">
-                                <small class="text-primary d-block fw-semibold">In Progress</small>
-                                <span class="fs-4 fw-bold text-primary">{{ task_stats.in_progress }}</span>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="p-2 border rounded bg-success bg-opacity-10">
-                                <small class="text-success d-block fw-semibold">Completed</small>
-                                <span class="fs-4 fw-bold text-success">{{ task_stats.completed }}</span>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="p-2 border rounded bg-danger bg-opacity-10">
-                                <small class="text-danger d-block fw-semibold">Overdue</small>
-                                <span class="fs-4 fw-bold text-danger">{{ task_stats.overdue }}</span>
-                            </div>
+                        <div>
+                            <h4 class="text-white fw-bold mb-0">{{ request.user.get_full_name }}</h4>
+                            <span class="badge bg-white text-primary px-2 mt-1">Supervisor</span>
                         </div>
                     </div>
-
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0 small">
-                            <thead class="bg-light">
-                                <tr>
-                                    <th>Task</th>
-                                    <th>Intern</th>
-                                    <th>Due Date</th>
-                                    <th>Progress</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for task in recent_tasks %}
-                                    <tr>
-                                        <td class="fw-semibold">
-                                            <a href="{% url 'supervisor_task_detail' task.pk %}" class="text-decoration-none">{{ task.title }}</a>
-                                        </td>
-                                        <td>{{ task.intern.user.get_full_name }}</td>
-                                        <td><span class="{% if task.is_overdue %}text-danger fw-bold{% endif %}">{{ task.due_date|date:"M j, Y" }}</span></td>
-                                        <td>
-                                            <div class="progress" style="height: 6px; width: 60px;">
-                                                <div class="progress-bar {% if task.progress == 100 %}bg-success{% endif %}" role="progressbar" style="width: {{ task.progress }}%;" aria-valuenow="{{ task.progress }}" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                            <small>{{ task.progress }}%</small>
-                                        </td>
-                                        <td>
-                                            <span class="badge {{ task.get_status_badge_class }}">
-                                                {{ task.get_display_status_display|default:task.display_status }}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                {% empty %}
-                                    <tr>
-                                        <td colspan="5" class="text-center text-muted py-3">
-                                            No active tasks found.
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                    <p class="text-white-50 mb-0 small">
+                        <i class="bi bi-envelope me-1" aria-hidden="true"></i>{{ request.user.email }}
+                        &bull;
+                        <i class="bi bi-people me-1" aria-hidden="true"></i>{{ assigned_count }} Assigned Intern{{ assigned_count|pluralize }}
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0 d-none d-md-block">
+                    <div class="bg-white bg-opacity-10 p-3 rounded-3 border border-white border-opacity-25 text-center">
+                        <i class="bi bi-person-workspace fs-2 text-info d-block mb-1" aria-hidden="true"></i>
+                        <div class="text-white small fw-semibold">Supervisor Portal</div>
+                        <div class="text-white-50 small">Damak Municipality IMS</div>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- Internship progress bar at bottom of hero -->
+        {% if assigned_count > 0 %}
+        <div class="ims-hero-progress" style="height:4px;">
+            <div class="ims-hero-progress-bar" style="width:{{ evaluation_stats.pct_evaluated|default:0 }}%;"></div>
+        </div>
+        {% endif %}
     </div>
 
-    <!-- Today's Attendance Summary Row -->
+    <!-- KPI Stat Cards Row -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-lg-3">
+            <a href="{% url 'supervisor_my_interns' %}" class="text-decoration-none">
+                <div class="ims-kpi-card kpi-primary h-100">
+                    <div class="ims-kpi-icon kpi-primary">
+                        <i class="bi bi-people-fill" aria-hidden="true"></i>
+                    </div>
+                    <div class="ims-kpi-body">
+                        <div class="ims-kpi-value">{{ assigned_count }}</div>
+                        <div class="ims-kpi-label">Assigned Interns</div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-lg-3">
+            <a href="{% url 'supervisor_logbook' %}" class="text-decoration-none">
+                <div class="ims-kpi-card kpi-warning h-100">
+                    <div class="ims-kpi-icon kpi-warning">
+                        <i class="bi bi-journal-text" aria-hidden="true"></i>
+                    </div>
+                    <div class="ims-kpi-body">
+                        <div class="ims-kpi-value">{{ pending_log_count }}</div>
+                        <div class="ims-kpi-label">Pending Log Reviews</div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-lg-3">
+            <a href="{% url 'evaluations:supervisor_evaluation_list' %}" class="text-decoration-none">
+                <div class="ims-kpi-card kpi-info h-100">
+                    <div class="ims-kpi-icon kpi-info">
+                        <i class="bi bi-star-half" aria-hidden="true"></i>
+                    </div>
+                    <div class="ims-kpi-body">
+                        <div class="ims-kpi-value">{{ evaluation_stats.unevaluated }}</div>
+                        <div class="ims-kpi-label">Pending Evaluations</div>
+                        <div class="ims-kpi-sub">{{ evaluation_stats.evaluated }} completed</div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-6 col-lg-3">
+            <a href="{% url 'supervisor_task_list' %}" class="text-decoration-none">
+                <div class="ims-kpi-card kpi-danger h-100">
+                    <div class="ims-kpi-icon kpi-danger">
+                        <i class="bi bi-exclamation-triangle" aria-hidden="true"></i>
+                    </div>
+                    <div class="ims-kpi-body">
+                        <div class="ims-kpi-value">{{ task_stats.overdue }}</div>
+                        <div class="ims-kpi-label">Overdue Tasks</div>
+                        <div class="ims-kpi-sub">{{ task_stats.total }} total tasks</div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Charts Row: Attendance + Task Breakdown -->
     <div class="row g-4 mb-4">
-        <div class="col-lg-8">
+        <!-- Today's Attendance Doughnut -->
+        <div class="col-lg-5">
             <div class="card ims-card border-0 shadow-sm h-100">
                 <div class="card-header bg-transparent border-bottom py-3 d-flex justify-content-between align-items-center">
                     <h6 class="fw-bold mb-0 text-dark">
-                        <i class="bi bi-calendar-check me-2 text-primary"></i>Today's Attendance Overview
-                        <span class="text-muted small">({{ today_date|date:"F j, Y" }})</span>
+                        <i class="bi bi-calendar-check me-2 text-primary" aria-hidden="true"></i>Today's Attendance
+                        <span class="text-muted fw-normal small ms-1">({{ today_date|date:"M j" }})</span>
                     </h6>
                     <a href="{% url 'supervisor_attendance' %}" class="btn btn-sm btn-outline-primary">View All</a>
                 </div>
-                <div class="card-body">
-                    <div class="row g-3 mb-4 text-center">
-                        <div class="col-3">
-                            <div class="p-2 border rounded bg-light">
-                                <small class="text-muted d-block">Assigned Interns</small>
-                                <span class="fs-4 fw-bold text-dark">{{ assigned_count }}</span>
+                <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                    {% if assigned_count > 0 %}
+                    <!-- Attendance summary numbers -->
+                    <div class="row g-2 w-100 mb-3 text-center">
+                        <div class="col-4">
+                            <div class="p-2 rounded-3 bg-success bg-opacity-10">
+                                <div class="fs-4 fw-bold text-success">{{ present_today }}</div>
+                                <small class="text-muted">Present</small>
                             </div>
                         </div>
-                        <div class="col-3">
-                            <div class="p-2 border rounded bg-success bg-opacity-10">
-                                <small class="text-success d-block fw-semibold">Present</small>
-                                <span class="fs-4 fw-bold text-success">{{ present_today }}</span>
+                        <div class="col-4">
+                            <div class="p-2 rounded-3 bg-warning bg-opacity-10">
+                                <div class="fs-4 fw-bold text-warning">{{ leave_today }}</div>
+                                <small class="text-muted">Leave</small>
                             </div>
                         </div>
-                        <div class="col-3">
-                            <div class="p-2 border rounded bg-warning bg-opacity-10">
-                                <small class="text-warning d-block fw-semibold">Leave</small>
-                                <span class="fs-4 fw-bold text-warning">{{ leave_today }}</span>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="p-2 border rounded bg-danger bg-opacity-10">
-                                <small class="text-danger d-block fw-semibold">Absent</small>
-                                <span class="fs-4 fw-bold text-danger">{{ absent_today }}</span>
+                        <div class="col-4">
+                            <div class="p-2 rounded-3 bg-danger bg-opacity-10">
+                                <div class="fs-4 fw-bold text-danger">{{ absent_today }}</div>
+                                <small class="text-muted">Absent</small>
                             </div>
                         </div>
                     </div>
+                    <!-- Doughnut chart -->
+                    <div class="ims-chart-container chart-sm d-flex align-items-center justify-content-center" style="max-width:200px;">
+                        <canvas id="attendanceDonut" aria-label="Today's attendance chart" role="img"></canvas>
+                    </div>
+                    {% else %}
+                    <div class="ims-empty-state py-4">
+                        <i class="bi bi-people ims-empty-icon"></i>
+                        <h5>No Interns Assigned</h5>
+                        <p>Assign interns to begin tracking attendance.</p>
+                    </div>
+                    {% endif %}
+                </div>
 
-                    <!-- Attendance Table -->
+                <!-- Today's Attendance Table -->
+                {% if today_records %}
+                <div class="card-footer bg-transparent border-top p-0">
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0 small">
-                            <thead class="bg-light">
+                        <table class="table ims-table mb-0" aria-label="Today's attendance records">
+                            <thead>
                                 <tr>
-                                    <th>Intern Name</th>
+                                    <th class="ps-4">Intern</th>
                                     <th>Status</th>
                                     <th>Check-in</th>
                                     <th>Check-out</th>
@@ -202,129 +190,323 @@
                             </thead>
                             <tbody>
                                 {% for rec in today_records %}
-                                    <tr>
-                                        <td class="fw-semibold">{{ rec.intern.user.get_full_name }}</td>
-                                        <td>
-                                            <span class="badge {% if rec.status == 'PRESENT' %}bg-success{% elif rec.status == 'LEAVE' %}bg-warning text-dark{% else %}bg-danger{% endif %}">
-                                                {{ rec.get_status_display }}
-                                            </span>
-                                        </td>
-                                        <td>{{ rec.check_in|time:"h:i A"|default:"—" }}</td>
-                                        <td>{{ rec.check_out|time:"h:i A"|default:"—" }}</td>
-                                    </tr>
-                                {% empty %}
-                                    <tr>
-                                        <td colspan="4" class="text-center text-muted py-3">
-                                            No attendance marked yet today.
-                                        </td>
-                                    </tr>
+                                <tr>
+                                    <td class="ps-4 fw-semibold">{{ rec.intern.user.get_full_name }}</td>
+                                    <td>
+                                        <span class="badge {% if rec.status == 'PRESENT' %}bg-success{% elif rec.status == 'LEAVE' %}bg-warning text-dark{% else %}bg-danger{% endif %}">
+                                            {{ rec.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>{{ rec.check_in|time:"h:i A"|default:"—" }}</td>
+                                    <td>{{ rec.check_out|time:"h:i A"|default:"—" }}</td>
+                                </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
                 </div>
+                {% elif assigned_count > 0 %}
+                <div class="card-footer bg-transparent border-top py-3 text-center text-muted small">
+                    <i class="bi bi-info-circle me-1"></i> No attendance marked yet today.
+                </div>
+                {% endif %}
             </div>
         </div>
 
-        <div class="col-lg-4">
-            <div class="card ims-card mb-4">
-                <div class="card-header bg-transparent border-bottom py-3">
-                    <h6 class="fw-bold mb-0"><i class="bi bi-person-circle me-2 text-primary"></i>Your Account</h6>
+        <!-- Task Breakdown Doughnut + Pending Logs -->
+        <div class="col-lg-7">
+            <div class="row g-4 h-100">
+                <!-- Task Doughnut -->
+                <div class="col-md-6">
+                    <div class="card ims-card border-0 shadow-sm h-100">
+                        <div class="card-header bg-transparent border-bottom py-3 d-flex justify-content-between align-items-center">
+                            <h6 class="fw-bold mb-0 text-dark">
+                                <i class="bi bi-list-task me-2 text-primary" aria-hidden="true"></i>Task Status
+                            </h6>
+                            <a href="{% url 'supervisor_task_list' %}" class="btn btn-sm btn-outline-primary">View All</a>
+                        </div>
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                            {% if task_stats.total > 0 %}
+                            <div class="ims-chart-container chart-sm d-flex align-items-center justify-content-center" style="max-width:180px;">
+                                <canvas id="taskDoughnut" aria-label="Task status breakdown chart" role="img"></canvas>
+                            </div>
+                            <div class="row g-1 w-100 mt-3 small text-center">
+                                <div class="col-6"><span class="badge bg-secondary w-100">{{ task_stats.pending }} Pending</span></div>
+                                <div class="col-6"><span class="badge bg-primary w-100">{{ task_stats.in_progress }} In Progress</span></div>
+                                <div class="col-6"><span class="badge bg-success w-100">{{ task_stats.completed }} Done</span></div>
+                                <div class="col-6"><span class="badge bg-danger w-100">{{ task_stats.overdue }} Overdue</span></div>
+                            </div>
+                            {% else %}
+                            <div class="ims-empty-state py-3">
+                                <i class="bi bi-list-task ims-empty-icon"></i>
+                                <p class="mb-0">No tasks created yet.</p>
+                                <a href="{% url 'supervisor_task_create' %}" class="btn btn-sm btn-primary mt-2">Create Task</a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body d-flex flex-column gap-2">
-                    <div class="d-flex justify-content-between small py-1 border-bottom">
-                        <span class="text-muted">Full Name</span>
-                        <span class="fw-semibold">{{ request.user.get_full_name }}</span>
+
+                <!-- Pending Logs -->
+                <div class="col-md-6">
+                    <div class="card ims-card border-0 shadow-sm h-100">
+                        <div class="card-header bg-transparent border-bottom py-3 d-flex justify-content-between align-items-center">
+                            <h6 class="fw-bold mb-0 text-dark">
+                                <i class="bi bi-journal-text me-2 text-warning" aria-hidden="true"></i>Pending Logs
+                            </h6>
+                            <span class="badge bg-warning text-dark" aria-label="{{ pending_log_count }} pending logs">{{ pending_log_count }} Pending</span>
+                        </div>
+                        <div class="card-body p-0">
+                            {% if recent_pending_logs %}
+                            <div class="list-group list-group-flush small">
+                                {% for log in recent_pending_logs %}
+                                <a href="{% url 'supervisor_log_detail' pk=log.pk %}" class="list-group-item list-group-item-action py-3 px-3">
+                                    <div class="d-flex w-100 justify-content-between mb-1">
+                                        <span class="fw-bold text-dark">{{ log.intern.user.get_full_name }}</span>
+                                        <span class="text-muted" style="font-size:0.72rem;">{{ log.date|date:"M j" }}</span>
+                                    </div>
+                                    <div class="text-truncate text-muted mb-1">{{ log.title }}</div>
+                                    <div class="d-flex gap-2">
+                                        <span class="badge ims-badge-soft-warning">Pending</span>
+                                        <span class="badge ims-badge-soft-secondary">{{ log.hours_worked }}h</span>
+                                    </div>
+                                </a>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div class="ims-empty-state py-4">
+                                <i class="bi bi-check2-circle ims-empty-icon text-success" aria-hidden="true"></i>
+                                <p class="mb-0">All caught up! No pending logs.</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="card-footer bg-transparent border-top p-0">
+                            <a href="{% url 'supervisor_logbook' %}" class="btn btn-link text-decoration-none w-100 py-2 small fw-semibold">
+                                View All Logs <i class="bi bi-arrow-right ms-1" aria-hidden="true"></i>
+                            </a>
+                        </div>
                     </div>
-                    <div class="d-flex justify-content-between small py-1 border-bottom">
-                        <span class="text-muted">Email</span>
-                        <span class="fw-semibold">{{ request.user.email }}</span>
-                    </div>
-                    <div class="d-flex justify-content-between small py-1 border-bottom">
-                        <span class="text-muted">Role</span>
-                        <span class="badge bg-primary">Supervisor</span>
-                    </div>
-                    <div class="d-flex justify-content-between small py-1">
-                        <span class="text-muted">Status</span>
-                        <span class="badge bg-success">Active</span>
-                    </div>
-                    <hr class="my-1">
-                    <a href="{% url 'password_change' %}" class="btn btn-outline-primary btn-sm w-100">
-                        <i class="bi bi-key me-1"></i>Change Password
-                    </a>
-                    <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-sm w-100">
-                        <i class="bi bi-box-arrow-right me-1"></i>Logout
-                    </a>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <!-- Pending Logs Card -->
-            <div class="card ims-card border-0 shadow-sm mb-4">
+    <!-- Tasks & Evaluations Row -->
+    <div class="row g-4 mb-4">
+        <!-- Recent Tasks -->
+        <div class="col-lg-8">
+            <div class="card ims-card border-0 shadow-sm h-100">
                 <div class="card-header bg-transparent border-bottom py-3 d-flex justify-content-between align-items-center">
                     <h6 class="fw-bold mb-0 text-dark">
-                        <i class="bi bi-journal-text me-2 text-warning"></i>Pending Logs
+                        <i class="bi bi-list-task me-2 text-primary" aria-hidden="true"></i>Recent Tasks
                     </h6>
-                    <span class="badge bg-warning text-dark">{{ pending_log_count }} Pending</span>
+                    <a href="{% url 'supervisor_task_list' %}" class="btn btn-sm btn-outline-primary">View All</a>
                 </div>
                 <div class="card-body p-0">
-                    {% if recent_pending_logs %}
-                    <div class="list-group list-group-flush small">
-                        {% for log in recent_pending_logs %}
-                        <a href="{% url 'supervisor_log_detail' pk=log.pk %}" class="list-group-item list-group-item-action py-3">
-                            <div class="d-flex w-100 justify-content-between mb-1">
-                                <span class="fw-bold text-dark">{{ log.intern.user.get_full_name }}</span>
-                                <span class="text-muted" style="font-size:0.75rem;">{{ log.date|date:"M j" }}</span>
-                            </div>
-                            <div class="text-truncate text-muted mb-2" style="max-width: 250px;">{{ log.title }}</div>
-                            <div class="d-flex gap-2">
-                                <span class="badge bg-warning text-dark">Pending</span>
-                                <span class="badge bg-light text-dark border">{{ log.hours_worked }}h</span>
-                            </div>
-                        </a>
-                        {% endfor %}
+                    {% if recent_tasks %}
+                    <div class="table-responsive">
+                        <table class="table ims-table mb-0" aria-label="Recent tasks">
+                            <thead>
+                                <tr>
+                                    <th class="ps-4">Task</th>
+                                    <th>Intern</th>
+                                    <th>Due</th>
+                                    <th>Progress</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for task in recent_tasks %}
+                                <tr>
+                                    <td class="ps-4">
+                                        <a href="{% url 'supervisor_task_detail' task.pk %}" class="text-decoration-none fw-semibold text-dark">{{ task.title }}</a>
+                                    </td>
+                                    <td class="text-muted">{{ task.intern.user.get_full_name }}</td>
+                                    <td>
+                                        <span class="{% if task.is_overdue %}text-danger fw-semibold{% else %}text-muted{% endif %}">
+                                            {{ task.due_date|date:"M j" }}
+                                        </span>
+                                    </td>
+                                    <td style="min-width:100px;">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="progress flex-grow-1" style="height:6px;" aria-label="{{ task.progress }}% complete">
+                                                <div class="progress-bar {% if task.progress == 100 %}bg-success{% elif task.is_overdue %}bg-danger{% else %}bg-primary{% endif %}"
+                                                     role="progressbar"
+                                                     style="width:{{ task.progress }}%"
+                                                     aria-valuenow="{{ task.progress }}"
+                                                     aria-valuemin="0"
+                                                     aria-valuemax="100"></div>
+                                            </div>
+                                            <small class="text-muted fw-semibold" style="width:30px;">{{ task.progress }}%</small>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge {{ task.get_status_badge_class }}">
+                                            {{ task.get_display_status_display|default:task.display_status }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                     {% else %}
-                    <div class="text-center py-4">
-                        <i class="bi bi-check2-circle fs-2 text-success d-block mb-2"></i>
-                        <span class="text-muted small">All caught up! No pending logs.</span>
+                    <div class="ims-empty-state">
+                        <i class="bi bi-list-check ims-empty-icon" aria-hidden="true"></i>
+                        <h5>No Tasks Yet</h5>
+                        <p>Create tasks and assign them to your interns.</p>
+                        <a href="{% url 'supervisor_task_create' %}" class="btn btn-primary btn-sm">
+                            <i class="bi bi-plus-circle me-1" aria-hidden="true"></i>Create First Task
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Evaluations Summary -->
+        <div class="col-lg-4">
+            <div class="card ims-card border-0 shadow-sm h-100">
+                <div class="card-header bg-transparent border-bottom py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="fw-bold mb-0 text-dark">
+                        <i class="bi bi-star-half me-2 text-primary" aria-hidden="true"></i>Evaluations
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <!-- Evaluation completion donut -->
+                    {% if assigned_count > 0 %}
+                    <div class="text-center mb-3">
+                        <div class="display-5 fw-bold text-primary">{{ evaluation_stats.evaluated }}</div>
+                        <div class="text-muted small">of {{ assigned_count }} intern{{ assigned_count|pluralize }} evaluated</div>
+                    </div>
+                    <!-- Progress bar -->
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between small mb-1">
+                            <span class="text-muted">Completion</span>
+                            <span class="fw-semibold">{{ evaluation_stats.pct_evaluated|default:0 }}%</span>
+                        </div>
+                        <div class="progress" style="height:8px;" aria-label="Evaluation completion {{ evaluation_stats.pct_evaluated|default:0 }}%">
+                            <div class="progress-bar bg-primary" style="width:{{ evaluation_stats.pct_evaluated|default:0 }}%"
+                                 aria-valuenow="{{ evaluation_stats.pct_evaluated|default:0 }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    <div class="list-group list-group-flush small">
+                        <div class="list-group-item px-0 d-flex justify-content-between py-2">
+                            <span class="text-muted">Evaluated</span>
+                            <span class="badge bg-success rounded-pill">{{ evaluation_stats.evaluated }}</span>
+                        </div>
+                        <div class="list-group-item px-0 d-flex justify-content-between py-2">
+                            <span class="text-muted">Pending</span>
+                            <span class="badge bg-warning text-dark rounded-pill">{{ evaluation_stats.unevaluated }}</span>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="ims-empty-state py-3">
+                        <i class="bi bi-star ims-empty-icon" aria-hidden="true"></i>
+                        <p class="mb-0">No interns assigned yet.</p>
                     </div>
                     {% endif %}
                 </div>
                 <div class="card-footer bg-transparent border-top p-0">
-                    <a href="{% url 'supervisor_logbook' %}" class="btn btn-link text-decoration-none w-100 py-2 small fw-semibold">
-                        View All Logs <i class="bi bi-arrow-right ms-1"></i>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Evaluations Summary Card -->
-            <div class="card ims-card border-0 shadow-sm mb-4">
-                <div class="card-header bg-transparent border-bottom py-3 d-flex justify-content-between align-items-center">
-                    <h6 class="fw-bold mb-0 text-dark">
-                        <i class="bi bi-star-half me-2 text-primary"></i>Evaluations
-                    </h6>
-                </div>
-                <div class="card-body p-0">
-                    <div class="list-group list-group-flush small">
-                        <div class="list-group-item d-flex justify-content-between align-items-center py-3">
-                            <span class="text-muted fw-semibold">Evaluated Interns</span>
-                            <span class="badge bg-success rounded-pill">{{ evaluation_stats.evaluated }}</span>
-                        </div>
-                        <div class="list-group-item d-flex justify-content-between align-items-center py-3">
-                            <span class="text-muted fw-semibold">Pending Evaluations</span>
-                            <span class="badge bg-warning text-dark rounded-pill">{{ evaluation_stats.unevaluated }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer bg-transparent border-top p-0">
                     <a href="{% url 'evaluations:supervisor_evaluation_list' %}" class="btn btn-link text-decoration-none w-100 py-2 small fw-semibold">
-                        Manage Evaluations <i class="bi bi-arrow-right ms-1"></i>
+                        Manage Evaluations <i class="bi bi-arrow-right ms-1" aria-hidden="true"></i>
                     </a>
                 </div>
             </div>
-
         </div>
     </div>
 
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // ─── Attendance Donut ───────────────────────────────────────
+    const attendanceCanvas = document.getElementById('attendanceDonut');
+    if (attendanceCanvas) {
+        const present = {{ present_today|default:0 }};
+        const leave   = {{ leave_today|default:0 }};
+        const absent  = {{ absent_today|default:0 }};
+        const total   = present + leave + absent;
+        const data    = total > 0 ? [present, leave, absent] : [1];
+        const colors  = total > 0
+            ? ['#10b981', '#f59e0b', '#ef4444']
+            : ['#e2e8f0'];
+        const labels  = total > 0
+            ? ['Present', 'Leave', 'Absent']
+            : ['No records'];
+
+        new Chart(attendanceCanvas, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: colors,
+                    borderWidth: 2,
+                    borderColor: '#fff',
+                    hoverBorderWidth: 3,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                cutout: '68%',
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(ctx) {
+                                return ' ' + ctx.label + ': ' + ctx.raw;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // ─── Task Doughnut ──────────────────────────────────────────
+    const taskCanvas = document.getElementById('taskDoughnut');
+    if (taskCanvas) {
+        const pending    = {{ task_stats.pending|default:0 }};
+        const inProgress = {{ task_stats.in_progress|default:0 }};
+        const completed  = {{ task_stats.completed|default:0 }};
+        const overdue    = {{ task_stats.overdue|default:0 }};
+        const total      = pending + inProgress + completed + overdue;
+
+        new Chart(taskCanvas, {
+            type: 'doughnut',
+            data: {
+                labels: ['Pending', 'In Progress', 'Completed', 'Overdue'],
+                datasets: [{
+                    data: total > 0 ? [pending, inProgress, completed, overdue] : [1],
+                    backgroundColor: total > 0
+                        ? ['#94a3b8', '#0284c7', '#10b981', '#ef4444']
+                        : ['#e2e8f0'],
+                    borderWidth: 2,
+                    borderColor: '#fff',
+                    hoverBorderWidth: 3,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                cutout: '68%',
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(ctx) {
+                                return ' ' + ctx.label + ': ' + ctx.raw;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+});
+</script>
 {% endblock %}
