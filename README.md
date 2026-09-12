@@ -18,6 +18,57 @@ A centralized web-based Intern Management System developed for **Damak Municipal
 
 ---
 
+## 📋 Project Requirements
+
+The following technologies and tools are required to run this project.
+
+### Runtime & Framework
+
+| Requirement | Details |
+|---|---|
+| **Python** | 3.10 or higher |
+| **Django** | >= 5.0, < 6.1 (see `requirements.txt`) |
+
+### Database
+
+| Requirement | Details |
+|---|---|
+| **MySQL** | 8.0+ (primary production database) |
+| **PyMySQL** | >= 1.1.0 — pure-Python MySQL connector used as the Django DB driver |
+| SQLite | Supported as a local/standalone fallback (no extra install needed) |
+
+### Frontend & UI Libraries
+
+| Requirement | Details |
+|---|---|
+| **HTML5 / CSS3 / JavaScript** | Standard web technologies used across all templates |
+| **Bootstrap 5.3** | CSS framework for responsive layout and UI components (loaded via CDN) |
+| **Bootstrap Icons** | Icon library bundled with Bootstrap 5 (loaded via CDN) |
+| **Chart.js** | 4.4.3 — used for dashboard data visualisations (loaded via CDN) |
+
+### Python Package Dependencies
+
+All Python dependencies are pinned in [`requirements.txt`](requirements.txt):
+
+| Package | Version Constraint | Purpose |
+|---|---|---|
+| `Django` | >=5.0, <6.1 | Web framework |
+| `python-dotenv` | >=1.0.0 | Environment variable management via `.env` |
+| `pymysql` | >=1.1.0 | MySQL database connector |
+| `cryptography` | >=42.0.0 | Required by PyMySQL for secure connections |
+| `Pillow` | >=10.0.0 | Image handling for media uploads |
+| `asgiref` | >=3.8.0 | ASGI compatibility layer (Django dependency) |
+| `sqlparse` | >=0.5.0 | SQL formatting (Django dependency) |
+| `tzdata` | >=2024.1 | Timezone database |
+
+### Development Tools
+
+| Requirement | Details |
+|---|---|
+| **Git** | Version control — used for source management and deployment |
+
+---
+
 ## 📁 Project Structure
 
 ```
