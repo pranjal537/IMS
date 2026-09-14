@@ -361,6 +361,151 @@ Log in to the admin console at `http://127.0.0.1:8000/admin/` using the superuse
 
 ---
 
+## 👔 Supervisor Workflow
+
+This section describes the end-to-end workflow available to a Supervisor user in the current implementation.
+
+---
+
+### 1. Supervisor Logs Into the System
+
+The supervisor navigates to the login page and authenticates using their registered **email address and password**.
+
+- Login page: `http://127.0.0.1:8000/login/`
+- The system uses Django's authentication backend. Email is the unique identifier (not username).
+- On successful login, the `dashboard_redirect` view detects the user's `SUPERVISOR` role and redirects automatically to the Supervisor Dashboard.
+- An incorrect credential returns a generic error message (the system does not reveal whether an email exists).
+
+---
+
+### 2. Supervisor Accesses the Dashboard
+
+After login, the supervisor is directed to the Supervisor Dashboard.
+
+- URL: `http://127.0.0.1:8000/supervisor/dashboard/`
+- The dashboard is protected by the `@supervisor_required` decorator; intern-role users and unauthenticated users are blocked.
+- The dashboard displays a real-time summary panel including:
+  - **Total assigned interns** count
+  - **Today's attendance snapshot** — present, on leave, and absent counts for the current date
+  - **Pending logbook submissions** count (with a list of the 5 most recent pending logs)
+  - **Task statistics** — total, pending, in-progress, completed, and overdue task counts
+  - **Evaluation statistics** — number of interns evaluated vs. not yet evaluated
+
+---
+
+### 3. Supervisor Views Assigned Interns
+
+The supervisor can browse the full list of interns assigned to them.
+
+- URL: `http://127.0.0.1:8000/supervisor/interns/`
+- Only internships belonging to the logged-in supervisor are shown (server-side enforced).
+- The list supports:
+  - **Keyword search** — by intern name, email, intern ID, or position
+  - **Status filter** — Pending, Active, Completed, Cancelled
+  - **Department filter** — by municipal department
+- Each intern row displays computed internship progress metrics (working-day-based progress percentage via `calculate_internship_progress`).
+
+---
+
+### 4. Supervisor Monitors Internship Progress
+
+Internship progress is surfaced at multiple points in the system.
+
+- The **My Interns** list (`/supervisor/interns/`) shows per-intern progress metrics calculated from start date, expected end date, and working days completed.
+- The **Supervisor Dashboard** aggregates progress indicators across all assigned interns through task and evaluation statistics.
+- The supervisor can also view their own profile at `http://127.0.0.1:8000/supervisor/profile/` and update their designation, department, phone, and profile photo.
+
+---
+
+### 5. Supervisor Monitors Intern Attendance
+
+The supervisor has read and write access to attendance records for their assigned interns.
+
+- **Attendance list** URL: `http://127.0.0.1:8000/supervisor/attendance/`
+  - Displays all attendance records strictly scoped to the supervisor's assigned interns.
+  - Supports filtering by intern name/ID, attendance status (Present, Absent, Leave), and date.
+- **Add attendance / leave record** URL: `http://127.0.0.1:8000/supervisor/attendance/create/`
+  - The supervisor can log an attendance or leave record on behalf of an assigned intern.
+  - A security check prevents submission for interns not assigned to the supervisor.
+- **Edit attendance record** URL: `http://127.0.0.1:8000/supervisor/attendance/<id>/edit/`
+  - The supervisor can correct an existing attendance record.
+- The **Supervisor Dashboard** (`/supervisor/dashboard/`) also shows the live today's attendance counts.
+
+---
+
+### 6. Supervisor Reviews Daily Logbook Submissions
+
+The supervisor reviews, approves, and rejects daily log entries submitted by their assigned interns.
+
+- **Logbook list** URL: `http://127.0.0.1:8000/supervisor/logbook/`
+  - Lists all daily log entries scoped to the supervisor's assigned interns.
+  - Supports search by intern name, intern ID, or log title, plus filters for intern, status, and date.
+  - Displays a pending-count badge showing how many logs await review.
+- **Log detail / review** URL: `http://127.0.0.1:8000/supervisor/logbook/<id>/`
+  - Shows full log details including title, date, hours worked, activities, and any existing feedback.
+  - The supervisor can submit written feedback.
+- **Approve log** URL: `http://127.0.0.1:8000/supervisor/logbook/<id>/approve/` (POST)
+  - Transitions log status: **Pending → Approved**. Optional feedback can be saved.
+- **Reject log** URL: `http://127.0.0.1:8000/supervisor/logbook/<id>/reject/` (POST)
+  - Transitions log status: **Pending → Rejected**. Supervisor feedback is **required** for rejection so the intern can resubmit.
+- Security is enforced server-side: a supervisor can only act on logs belonging to their assigned interns.
+
+---
+
+### 7. Supervisor Manages Intern Tasks
+
+The supervisor creates, edits, and tracks tasks assigned to their interns.
+
+- **Task list** URL: `http://127.0.0.1:8000/supervisor/tasks/`
+  - Lists all tasks for the supervisor's assigned interns.
+  - Supports search by task title or intern name/ID, and filters by intern, priority, and status.
+  - Overdue tasks (past due date and not completed) are identified by a special filter.
+- **Create task** URL: `http://127.0.0.1:8000/supervisor/tasks/create/`
+  - The supervisor assigns a new task to one of their interns, setting title, description, priority, and due date.
+  - Task is created with status **Pending** and progress **0%**.
+- **Task detail** URL: `http://127.0.0.1:8000/supervisor/tasks/<id>/`
+  - Full read-only view of the task including current status, progress percentage, and priority.
+- **Edit task** URL: `http://127.0.0.1:8000/supervisor/tasks/<id>/edit/`
+  - The supervisor can update the task title, description, due date, or priority.
+- The **Supervisor Dashboard** also shows task summary statistics (total, pending, in-progress, completed, overdue).
+
+---
+
+### 8. Supervisor Evaluates Assigned Interns
+
+The supervisor creates and manages formal performance evaluations for their assigned interns.
+
+- **Evaluation list** URL: `http://127.0.0.1:8000/evaluations/supervisor/evaluations/`
+  - Lists all internships assigned to the supervisor with evaluation status (evaluated / not yet evaluated).
+- **Create evaluation** URL: `http://127.0.0.1:8000/evaluations/supervisor/evaluations/create/<internship_id>/`
+  - The supervisor submits a formal evaluation for an intern's internship.
+  - Context data (task completion counts, log approval counts) is shown during evaluation creation.
+  - Only one evaluation per internship is allowed; attempting to create a duplicate redirects to the existing evaluation.
+- **Evaluation detail** URL: `http://127.0.0.1:8000/evaluations/supervisor/evaluations/<id>/`
+  - Read view of a submitted evaluation.
+- **Edit evaluation** URL: `http://127.0.0.1:8000/evaluations/supervisor/evaluations/<id>/edit/`
+  - The supervisor can update a previously submitted evaluation.
+- The **Supervisor Dashboard** shows a live count of evaluated vs. unevaluated interns.
+
+---
+
+### 9. Supervisor Views and Manages Intern Documents
+
+The supervisor can view and manage documents associated with their assigned interns.
+
+- **Document list** URL: `http://127.0.0.1:8000/documents/`
+  - Supervisors see documents for all their assigned interns (scoped server-side by assignment).
+  - Supports filtering by intern and document category.
+- **Upload document for intern** URL: `http://127.0.0.1:8000/documents/upload/` or `http://127.0.0.1:8000/documents/supervisor/upload/<intern_id>/`
+  - The supervisor can upload a document (e.g., recommendation letter, ID document) on behalf of an assigned intern.
+  - Security check prevents uploading for interns not assigned to the supervisor.
+- **Download document** URL: `http://127.0.0.1:8000/documents/<id>/download/`
+  - Serves the file only if the supervisor is confirmed as the responsible supervisor for that intern (IDOR-protected).
+- **Delete document** URL: `http://127.0.0.1:8000/documents/<id>/delete/` (POST)
+  - Removes the document record and its physical file from media storage.
+
+---
+
 ## 🌐 Key URLs & Endpoints
 
 | URL Route | Page / Purpose |
