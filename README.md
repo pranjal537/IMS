@@ -506,6 +506,156 @@ The supervisor can view and manage documents associated with their assigned inte
 
 ---
 
+## 🎓 Intern Workflow
+
+This section describes the end-to-end workflow available to an Intern user in the current implementation.
+
+---
+
+### 1. Intern Logs Into the System
+
+The intern navigates to the login page and authenticates using their registered **email address and password**.
+
+- Login page: `http://127.0.0.1:8000/login/`
+- The system uses Django's authentication backend. Email is the unique identifier (not username).
+- On successful login, the `dashboard_redirect` view detects the user's `INTERN` role and redirects automatically to the Intern Dashboard.
+- An incorrect credential returns a generic error message (the system does not reveal whether an email exists).
+
+---
+
+### 2. Intern Accesses the Dashboard
+
+After login, the intern is directed to the Intern Dashboard.
+
+- URL: `http://127.0.0.1:8000/intern/dashboard/`
+- The dashboard is protected by the `@intern_required` decorator; supervisor-role users and unauthenticated users are blocked.
+- The dashboard displays a personalised summary including:
+  - **Today's attendance status** — whether the intern has checked in, checked out, or has no record for today
+  - **Attendance statistics** — total working days, present count, leave count, and absent count
+  - **Logbook statistics** — total logs submitted, approved, pending, and rejected
+  - **Task statistics** — total, pending, in-progress, completed, and overdue task counts
+  - **Latest evaluation** — a summary of the supervisor's evaluation if one has been submitted
+
+---
+
+### 3. Intern Views Internship Information and Profile
+
+The intern can view their personal profile and internship placement details.
+
+- **My Profile** URL: `http://127.0.0.1:8000/intern/profile/`
+  - Displays personal details: name, intern ID, phone, college, program, semester/year, and address.
+  - The intern can update editable fields (phone, college, program, semester/year, address, and profile photo).
+  - Protected fields (intern ID, supervisor, department, dates, status) are read-only and cannot be modified by the intern.
+- **My Internship** URL: `http://127.0.0.1:8000/intern/internship/`
+  - Displays internship placement details: department, supervisor, position, start date, expected end date, and current status.
+  - Shows computed progress metrics based on working days (Monday–Friday) elapsed versus the total internship duration.
+
+---
+
+### 4. Intern Records and Checks Attendance
+
+The intern records their own daily attendance directly from the system.
+
+- **Today's Attendance** URL: `http://127.0.0.1:8000/intern/attendance/`
+  - Displays the current date's attendance record — status, check-in time, and check-out time.
+  - Shows a weekend indicator on Saturdays and Sundays when attendance cannot be marked.
+  - Displays attendance summary statistics (total working days, present, leave, absent).
+- **Check In** (POST): `http://127.0.0.1:8000/intern/attendance/mark/`
+  - Marks the intern as Present for today and records the current time as the check-in time.
+  - Validates that the current date falls within the active internship period.
+  - Prevents duplicate check-in if a record already exists for today.
+- **Check Out** (POST): `http://127.0.0.1:8000/intern/attendance/checkout/`
+  - Records the current time as the check-out time on the existing today's attendance record.
+  - Requires a prior check-in record for today.
+- **Attendance History** URL: `http://127.0.0.1:8000/intern/attendance/history/`
+  - Lists all past attendance records for the logged-in intern, ordered by date (most recent first).
+  - Supports filtering by status (Present, Leave, Absent) and by month (YYYY-MM format).
+
+---
+
+### 5. Intern Creates and Submits Daily Logbook Entries
+
+The intern submits a daily log entry for each working day to record activities and hours worked.
+
+- **My Logbook** URL: `http://127.0.0.1:8000/intern/logbook/`
+  - Lists all the intern's own logbook entries ordered by date (most recent first).
+  - Displays logbook statistics: total logs, approved, pending, rejected, and total hours logged.
+  - Supports filtering by status (Pending, Approved, Rejected) and by month.
+- **Create Log Entry** URL: `http://127.0.0.1:8000/intern/logbook/create/`
+  - The intern submits a new daily log containing: date, activity title, description, skills learned, challenges encountered, and hours worked.
+  - A new log is created with status **Pending**, awaiting supervisor review.
+  - An attendance warning is shown if no Present record exists for the selected date.
+  - Only one log entry per date is allowed; attempting to create a duplicate redirects to the existing entry.
+  - Weekend dates (Saturday/Sunday) are rejected by the model's validation.
+- **Log Detail** URL: `http://127.0.0.1:8000/intern/logbook/<id>/`
+  - Read-only view of a specific log entry. Shows supervisor feedback if the log has been reviewed.
+- **Edit Log Entry** URL: `http://127.0.0.1:8000/intern/logbook/<id>/edit/`
+  - The intern can edit a log that is in **Pending** or **Rejected** status.
+  - Saving a **Rejected** log resubmits it, resetting the status back to **Pending**.
+  - **Approved** logs cannot be edited.
+
+---
+
+### 6. Intern Views Assigned Tasks and Updates Task Progress
+
+The intern views tasks assigned by their supervisor and reports progress on each task.
+
+- **My Tasks** URL: `http://127.0.0.1:8000/intern/tasks/`
+  - Lists all tasks assigned to the logged-in intern.
+  - Supports search by task title and filtering by priority (Low, Medium, High) and status (Pending, In Progress, Completed, Overdue).
+- **Task Detail / Update Progress** URL: `http://127.0.0.1:8000/intern/tasks/<id>/`
+  - Displays full task details: title, description, priority, start date, due date, current status, progress percentage, and any supervisor comments.
+  - The intern can update the progress percentage (0–100) and the task status.
+  - Setting progress to 100% automatically transitions the task status to **Completed**.
+  - Setting progress above 0% on a Pending task automatically transitions status to **In Progress**.
+  - Interns can only access and update their own tasks.
+
+---
+
+### 7. Intern Views Their Evaluation and Scores
+
+The intern can view the formal performance evaluation submitted by their supervisor.
+
+- **My Evaluation** URL: `http://127.0.0.1:8000/evaluations/intern/evaluation/`
+  - Displays the supervisor's evaluation for the intern's current internship.
+  - The evaluation includes scores (rated 1–5) across eight criteria: technical skills, communication, punctuality, problem solving, professionalism, work quality, learning ability, and discipline.
+  - Shows the calculated overall score (average of all eight criteria), the supervisor's final recommendation, and written comments (strengths, areas for improvement, and overall comments).
+  - If no evaluation has been submitted by the supervisor yet, the page indicates that the evaluation is pending.
+
+---
+
+### 8. Intern Tracks Internship Progress
+
+The intern can view a consolidated progress overview of their entire internship.
+
+- **My Progress** URL: `http://127.0.0.1:8000/evaluations/intern/progress/`
+  - Displays a unified progress dashboard covering four areas:
+    - **Internship timeline** — total working days, working days completed, remaining working days, and overall time progress percentage (Monday–Friday based).
+    - **Attendance summary** — total working days, present count, leave count, absent count, and attendance percentage.
+    - **Logbook summary** — total logs submitted, approved, pending, rejected, and total hours logged.
+    - **Task summary** — total tasks assigned, completed tasks, and average task progress percentage.
+  - Also shows the evaluation summary if one has been submitted by the supervisor.
+
+---
+
+### 9. Intern Uploads and Manages Internship Documents
+
+The intern can upload and manage their own internship-related documents.
+
+- **My Documents** URL: `http://127.0.0.1:8000/documents/`
+  - Lists all documents uploaded by or for the logged-in intern.
+  - Supports filtering by document category (Identity/Citizenship, Academic Document, Internship Letter, Project Report, Completion Certificate, Other).
+- **Upload Document** URL: `http://127.0.0.1:8000/documents/upload/`
+  - The intern uploads a document for themselves, providing a title, category, file, and an optional description/notes.
+  - Uploaded files are stored securely in the server's media directory.
+- **Download Document** URL: `http://127.0.0.1:8000/documents/<id>/download/`
+  - Serves the file as a download. Access is restricted to the document's owner intern (IDOR-protected; interns cannot download documents belonging to other interns).
+- **Delete Document** URL: `http://127.0.0.1:8000/documents/<id>/delete/` (POST)
+  - Removes the document record from the database and deletes the physical file from media storage.
+  - Access is restricted to the document's owner intern.
+
+---
+
 ## 🌐 Key URLs & Endpoints
 
 | URL Route | Page / Purpose |
