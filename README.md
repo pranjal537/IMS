@@ -7,6 +7,22 @@ A centralized web-based Intern Management System developed for **Damak Municipal
 
 ---
 
+## 🖥️ Application Preview
+
+The Damak Municipality Intern Management System (IMS) provides key web interfaces tailored to municipal supervisors and interning students:
+
+- **Landing Portal (`/`)**: Public overview page introducing the municipal internship program and providing navigation to login and diagnostic resources.
+- **Role-Based Login (`/login/`)**: Secure authentication entry point routing supervisors and interns to their respective portals based on account role.
+- **Supervisor Dashboard (`/supervisor/dashboard/`)**: Management hub for supervisors to monitor assigned interns, review pending logbooks, view daily attendance statistics, track task completion, and initiate evaluations.
+- **Intern Dashboard (`/intern/dashboard/`)**: Personal workspace for interning students to check in/out for attendance, track logbook approval statuses, view assigned tasks, and monitor overall internship progress.
+- **Attendance Tracker (`/intern/attendance/`, `/supervisor/attendance/`)**: Daily check-in/check-out mechanism for interns with supervisor oversight and date-range history filters.
+- **Daily Logbook Portal (`/intern/logbook/`, `/supervisor/logbook/`)**: Structured activity logging system allowing interns to submit daily entries and supervisors to approve, reject, or provide feedback.
+- **Task Allocation & Progress (`/intern/tasks/`, `/supervisor/tasks/`)**: Task assignment portal supporting priority levels, progress percentage updates, and deadline tracking.
+- **Performance Evaluation (`/evaluations/`)**: Rating system evaluating interns across technical capabilities, punctuality, communication, and professionalism.
+- **Document Repository (`/documents/`)**: Secure document storage for uploading, viewing, and managing internship verification documents and recommendation letters.
+
+---
+
 ## 🛠️ Technology Stack
 
 - **Backend Framework:** Python 3.10+ / Django 5.x / 6.x
