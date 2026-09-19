@@ -15,11 +15,11 @@
                     <li class="breadcrumb-item active" aria-current="page">Daily Logbook</li>
                 </ol>
             </nav>
-            <h2 class="fw-bold mb-0 text-dark">My Daily Logbook</h2>
+            <h2 class="ims-page-title">My Daily Logbook</h2>
             <p class="text-muted small mb-0">Record your daily activities and track progress</p>
         </div>
         <div>
-            <a href="{% url 'intern_log_create' %}" id="btn-add-log" class="btn btn-success fw-semibold d-flex align-items-center gap-2">
+            <a href="{% url 'intern_log_create' %}" id="btn-add-log" class="btn btn-primary fw-semibold d-flex align-items-center gap-2">
                 <i class="bi bi-plus-circle"></i> Add Daily Log
             </a>
         </div>
@@ -53,7 +53,7 @@
             </div>
         </div>
         <div class="col-12 col-md-4 col-lg-4">
-            <div class="card ims-card border-0 shadow-sm text-center p-3" style="background: linear-gradient(135deg,#064e3b,#10b981);">
+            <div class="card ims-card border-0 shadow-sm text-center p-3 text-white" style="background: linear-gradient(135deg, var(--ims-primary-dark), var(--ims-primary));">
                 <div class="text-white-50 small fw-semibold mb-1">Total Hours Logged</div>
                 <div class="fs-3 fw-bold text-white">{{ stats.total_hours }}</div>
             </div>
@@ -98,14 +98,14 @@
     <div class="card ims-card border-0 shadow-sm">
         <div class="card-header bg-transparent border-bottom py-3 d-flex justify-content-between align-items-center">
             <h6 class="fw-bold mb-0 text-dark">
-                <i class="bi bi-journal-text me-2 text-success"></i>Activity Log History
+                <i class="bi bi-journal-text me-2 text-primary"></i>Activity Log History
             </h6>
             <span class="badge bg-secondary">{{ logs|length }} entr{{ logs|length|pluralize:"y,ies" }}</span>
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="bg-light">
+                <table class="table ims-table table-hover align-middle mb-0">
+                    <thead>
                         <tr>
                             <th class="ps-4 py-3">Date</th>
                             <th>Activity</th>

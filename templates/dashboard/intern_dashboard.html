@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Intern Dashboard — Damak Municipality IMS{% endblock %}
 
@@ -14,73 +15,71 @@
                     <li class="breadcrumb-item active" aria-current="page">Intern Dashboard</li>
                 </ol>
             </nav>
-            <h2 class="fw-bold mb-0 text-dark">Intern Dashboard</h2>
-            <p class="text-muted small mb-0">
-                Welcome back, <strong>{{ welcome_name }}</strong> &bull;
-                <span class="text-muted">{{ today_date|date:"l, F j, Y" }}</span>
+            <h2 class="ims-page-title">Intern Dashboard</h2>
+            <p class="ims-page-subtitle">
+                Welcome, <strong>{{ welcome_name }}</strong> &bull;
+                {{ today_date|date:"l, F j, Y" }}
             </p>
         </div>
         <div class="d-flex gap-2">
-            <a href="{% url 'intern_attendance_today' %}" class="btn btn-sm btn-success d-flex align-items-center gap-1">
-                <i class="bi bi-clock"></i> Today's Attendance
+            <a href="{% url 'intern_attendance_today' %}" class="btn btn-success btn-sm d-flex align-items-center gap-1">
+                <i class="bi bi-clock" aria-hidden="true"></i> Today's Attendance
             </a>
-            <a href="{% url 'intern_log_create' %}" class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1">
-                <i class="bi bi-plus-circle"></i> Submit Log
+            <a href="{% url 'intern_log_create' %}" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1">
+                <i class="bi bi-plus-circle" aria-hidden="true"></i> Submit Log
             </a>
         </div>
     </div>
 
-    <!-- Welcome Hero Card -->
-    <div class="card ims-card border-0 mb-4 overflow-hidden"
-         style="background: linear-gradient(135deg, #064e3b 0%, #065f46 60%, #10b981 100%);">
-        <div class="card-body p-4">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <div class="d-flex align-items-center gap-3 mb-2">
-                        <div class="rounded-circle bg-white bg-opacity-20 text-white fw-bold d-flex align-items-center justify-content-center flex-shrink-0"
-                             style="width:52px;height:52px;font-size:1.2rem;" aria-hidden="true">
-                            {{ request.user.get_initials }}
-                        </div>
-                        <div>
-                            <h4 class="text-white fw-bold mb-0">{{ request.user.get_full_name|default:request.user.email }}</h4>
-                            <span class="badge bg-white text-success px-2 mt-1">Intern</span>
-                            {% if request.user.intern_profile.intern_id %}
-                                <span class="badge bg-white bg-opacity-25 text-white ms-1">{{ request.user.intern_profile.intern_id }}</span>
-                            {% endif %}
-                        </div>
+    <!-- Welcome Banner (Navy Blue for intern) -->
+    <div class="ims-welcome-banner ims-welcome-banner-intern mb-4">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <div class="d-flex align-items-center gap-3 mb-2">
+                    <div class="rounded-circle bg-white bg-opacity-25 text-white fw-bold d-flex align-items-center justify-content-center flex-shrink-0"
+                         style="width:50px;height:50px;font-size:1.15rem;" aria-hidden="true">
+                        {{ request.user.get_initials }}
                     </div>
-                    <p class="text-white-50 mb-0 small">
-                        <i class="bi bi-envelope me-1" aria-hidden="true"></i>{{ request.user.email }}
-                        &bull;
-                        <i class="bi bi-calendar3 me-1" aria-hidden="true"></i>Joined {{ request.user.date_joined|date:"M j, Y" }}
-                        {% if request.user.intern_profile.internship %}
-                            &bull;
-                            <i class="bi bi-briefcase me-1" aria-hidden="true"></i>{{ request.user.intern_profile.internship.department.name }}
+                    <div>
+                        <h4 class="text-white fw-bold mb-0" style="font-size:1.15rem;">{{ request.user.get_full_name|default:request.user.email }}</h4>
+                        <span class="badge bg-white px-2 mt-1" style="color:var(--ims-accent);font-size:.72rem;">Intern</span>
+                        {% if request.user.intern_profile.intern_id %}
+                            <span class="badge ms-1" style="background:rgba(255,255,255,.2);color:#fff;font-size:.7rem;">{{ request.user.intern_profile.intern_id }}</span>
                         {% endif %}
-                    </p>
-                </div>
-                <div class="col-md-4 text-md-end mt-3 mt-md-0 d-none d-md-block">
-                    <div class="bg-white bg-opacity-10 p-3 rounded-3 border border-white border-opacity-25 text-center">
-                        <i class="bi bi-person-badge fs-2 text-white d-block mb-1" aria-hidden="true"></i>
-                        <div class="text-white small fw-semibold">Intern Portal</div>
-                        <div class="text-white-50 small">Damak Municipality IMS</div>
                     </div>
+                </div>
+                <p class="mb-0" style="font-size:.82rem;color:rgba(255,255,255,.75);">
+                    <i class="bi bi-envelope me-1" aria-hidden="true"></i>{{ request.user.email }}
+                    &bull;
+                    <i class="bi bi-calendar3 me-1" aria-hidden="true"></i>Joined {{ request.user.date_joined|date:"M j, Y" }}
+                    {% if request.user.intern_profile.internship %}
+                        &bull;
+                        <i class="bi bi-briefcase me-1" aria-hidden="true"></i>{{ request.user.intern_profile.internship.department.name }}
+                    {% endif %}
+                </p>
+            </div>
+            <div class="col-md-4 text-md-end mt-3 mt-md-0 d-none d-md-block">
+                <div class="text-end" style="color:rgba(255,255,255,.7);font-size:.78rem;">
+                    <img src="{% static 'images/damak-mun-logo.jpg' %}"
+                         alt="Damak Municipality Emblem"
+                         style="width:48px;height:48px;border-radius:50%;border:2px solid rgba(255,255,255,.3);background:#fff;padding:2px;opacity:.85;">
+                    <div class="mt-1">Damak Municipality IMS</div>
+                    <div style="font-size:.7rem;color:rgba(255,255,255,.5);">Intern Portal</div>
                 </div>
             </div>
         </div>
-        <!-- Progress Bar at bottom of hero card if internship has progress -->
         {% if stats.attendance_percentage %}
-        <div class="ims-hero-progress" style="height:4px;">
+        <div class="ims-hero-progress mt-3">
             <div class="ims-hero-progress-bar" style="width:{{ stats.attendance_percentage }}%;"></div>
         </div>
         {% endif %}
     </div>
 
-    <!-- KPI Stat Cards Row -->
+    <!-- KPI Stat Cards -->
     <div class="row g-3 mb-4">
         <!-- Attendance Rate -->
         <div class="col-6 col-lg-3">
-            <a href="{% url 'intern_attendance_today' %}" class="text-decoration-none">
+            <a href="{% url 'intern_attendance_today' %}" class="text-decoration-none" aria-label="View attendance">
                 <div class="ims-kpi-card kpi-success h-100">
                     <div class="ims-kpi-icon kpi-success">
                         <i class="bi bi-person-check-fill" aria-hidden="true"></i>
@@ -94,9 +93,9 @@
             </a>
         </div>
 
-        <!-- Tasks Completed -->
+        <!-- Tasks -->
         <div class="col-6 col-lg-3">
-            <a href="{% url 'intern_task_list' %}" class="text-decoration-none">
+            <a href="{% url 'intern_task_list' %}" class="text-decoration-none" aria-label="View tasks">
                 <div class="ims-kpi-card kpi-primary h-100">
                     <div class="ims-kpi-icon kpi-primary">
                         <i class="bi bi-check2-circle" aria-hidden="true"></i>
@@ -116,11 +115,11 @@
             </a>
         </div>
 
-        <!-- Daily Logs -->
+        <!-- Approved Logs -->
         <div class="col-6 col-lg-3">
-            <a href="{% url 'intern_logbook' %}" class="text-decoration-none">
-                <div class="ims-kpi-card kpi-info h-100">
-                    <div class="ims-kpi-icon kpi-info">
+            <a href="{% url 'intern_logbook' %}" class="text-decoration-none" aria-label="View logbook">
+                <div class="ims-kpi-card kpi-accent h-100">
+                    <div class="ims-kpi-icon kpi-accent">
                         <i class="bi bi-journal-check" aria-hidden="true"></i>
                     </div>
                     <div class="ims-kpi-body">
@@ -132,9 +131,9 @@
             </a>
         </div>
 
-        <!-- Evaluation / Progress -->
+        <!-- Evaluation -->
         <div class="col-6 col-lg-3">
-            <a href="{% url 'evaluations:intern_progress' %}" class="text-decoration-none">
+            <a href="{% url 'evaluations:intern_progress' %}" class="text-decoration-none" aria-label="View evaluation">
                 <div class="ims-kpi-card kpi-warning h-100">
                     <div class="ims-kpi-icon kpi-warning">
                         <i class="bi bi-award-fill" aria-hidden="true"></i>
@@ -145,7 +144,7 @@
                             <div class="ims-kpi-label">Overall Score</div>
                             <div class="ims-kpi-sub text-success fw-semibold">{{ evaluation.get_final_recommendation_display }}</div>
                         {% else %}
-                            <div class="ims-kpi-value"><i class="bi bi-hourglass-split"></i></div>
+                            <div class="ims-kpi-value"><i class="bi bi-hourglass-split" aria-hidden="true"></i></div>
                             <div class="ims-kpi-label">Evaluation</div>
                             <div class="ims-kpi-sub text-muted">Pending review</div>
                         {% endif %}
@@ -155,53 +154,54 @@
         </div>
     </div>
 
-    <!-- Tasks Summary & Recent Tasks -->
+    <!-- Tasks Overview -->
     <div class="row g-4 mb-4">
         <div class="col-lg-12">
-            <div class="card ims-card border-0 shadow-sm h-100">
-                <div class="card-header bg-transparent border-bottom py-3 d-flex justify-content-between align-items-center">
-                    <h6 class="fw-bold mb-0 text-dark">
-                        <i class="bi bi-list-task me-2 text-success" aria-hidden="true"></i>Tasks Overview
+            <div class="card ims-card border-0 shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center py-3"
+                     style="background:var(--ims-accent);border-radius:8px 8px 0 0;">
+                    <h6 class="fw-bold mb-0 text-white">
+                        <i class="bi bi-list-task me-2" aria-hidden="true"></i>Tasks Overview
                     </h6>
-                    <a href="{% url 'intern_task_list' %}" class="btn btn-sm btn-outline-success">View All Tasks</a>
+                    <a href="{% url 'intern_task_list' %}" class="btn btn-sm" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);font-size:.75rem;">View All Tasks</a>
                 </div>
                 <div class="card-body">
                     <div class="row g-3 mb-4 text-center">
                         <div class="col">
-                            <div class="p-2 border rounded bg-light">
+                            <div class="p-2 border rounded" style="background:#F8F9FA;">
                                 <small class="text-muted d-block">Total Tasks</small>
-                                <span class="fs-4 fw-bold text-dark">{{ task_stats.total|default:0 }}</span>
+                                <span class="fs-4 fw-bold" style="color:var(--ims-text-main);">{{ task_stats.total|default:0 }}</span>
                             </div>
                         </div>
                         <div class="col">
-                            <div class="p-2 border rounded bg-secondary bg-opacity-10">
-                                <small class="text-secondary d-block fw-semibold">Pending</small>
-                                <span class="fs-4 fw-bold text-secondary">{{ task_stats.pending|default:0 }}</span>
+                            <div class="p-2 border rounded" style="background:#ECEFF1;">
+                                <small class="d-block fw-semibold" style="color:#607D8B;">Pending</small>
+                                <span class="fs-4 fw-bold" style="color:#607D8B;">{{ task_stats.pending|default:0 }}</span>
                             </div>
                         </div>
                         <div class="col">
-                            <div class="p-2 border rounded bg-primary bg-opacity-10">
-                                <small class="text-primary d-block fw-semibold">In Progress</small>
-                                <span class="fs-4 fw-bold text-primary">{{ task_stats.in_progress|default:0 }}</span>
+                            <div class="p-2 border rounded" style="background:#E8EDF5;">
+                                <small class="d-block fw-semibold" style="color:var(--ims-accent);">In Progress</small>
+                                <span class="fs-4 fw-bold" style="color:var(--ims-accent);">{{ task_stats.in_progress|default:0 }}</span>
                             </div>
                         </div>
                         <div class="col">
-                            <div class="p-2 border rounded bg-success bg-opacity-10">
-                                <small class="text-success d-block fw-semibold">Completed</small>
-                                <span class="fs-4 fw-bold text-success">{{ task_stats.completed|default:0 }}</span>
+                            <div class="p-2 border rounded" style="background:#E8F5E9;">
+                                <small class="d-block fw-semibold" style="color:var(--ims-success);">Completed</small>
+                                <span class="fs-4 fw-bold" style="color:var(--ims-success);">{{ task_stats.completed|default:0 }}</span>
                             </div>
                         </div>
                         <div class="col">
-                            <div class="p-2 border rounded bg-danger bg-opacity-10">
-                                <small class="text-danger d-block fw-semibold">Overdue</small>
-                                <span class="fs-4 fw-bold text-danger">{{ task_stats.overdue|default:0 }}</span>
+                            <div class="p-2 border rounded" style="background:#FFEBEE;">
+                                <small class="d-block fw-semibold" style="color:var(--ims-danger);">Overdue</small>
+                                <span class="fs-4 fw-bold" style="color:var(--ims-danger);">{{ task_stats.overdue|default:0 }}</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0 small">
-                            <thead class="bg-light">
+                        <table class="table ims-table mb-0" aria-label="Recent tasks">
+                            <thead>
                                 <tr>
                                     <th>Task</th>
                                     <th>Priority</th>
@@ -214,7 +214,9 @@
                                 {% for task in recent_tasks %}
                                     <tr>
                                         <td class="fw-semibold">
-                                            <a href="{% url 'intern_task_detail' task.pk %}" class="text-decoration-none">{{ task.title }}</a>
+                                            <a href="{% url 'intern_task_detail' task.pk %}"
+                                               class="text-decoration-none"
+                                               style="color:var(--ims-accent);">{{ task.title }}</a>
                                         </td>
                                         <td>
                                             <span class="badge {{ task.get_priority_badge_class }}">
@@ -224,8 +226,11 @@
                                         <td><span class="{% if task.is_overdue %}text-danger fw-bold{% endif %}">{{ task.due_date|date:"M j, Y" }}</span></td>
                                         <td>
                                             <div class="d-flex align-items-center gap-2">
-                                                <div class="progress flex-grow-1" style="height: 6px; min-width: 60px;">
-                                                    <div class="progress-bar {% if task.progress == 100 %}bg-success{% endif %}" role="progressbar" style="width: {{ task.progress }}%;" aria-valuenow="{{ task.progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                <div class="progress flex-grow-1" style="height:6px;min-width:60px;background:var(--ims-border-light);">
+                                                    <div class="progress-bar {% if task.progress == 100 %}bg-success{% endif %}"
+                                                         role="progressbar"
+                                                         style="width:{{ task.progress }}%;{% if task.progress != 100 %}background:var(--ims-accent);{% endif %}"
+                                                         aria-valuenow="{{ task.progress }}" aria-valuemin="0" aria-valuemax="100"></div>
                                                 </div>
                                                 <small class="text-muted">{{ task.progress }}%</small>
                                             </div>
@@ -254,16 +259,17 @@
         </div>
     </div>
 
-    <!-- Attendance Summary & Side Cards Row -->
+    <!-- Attendance + Sidebar Cards -->
     <div class="row g-4 mb-4">
         <!-- Attendance Overview -->
         <div class="col-lg-8">
             <div class="card ims-card border-0 shadow-sm h-100">
-                <div class="card-header bg-transparent border-bottom py-3 d-flex justify-content-between align-items-center">
-                    <h6 class="fw-bold mb-0 text-dark">
-                        <i class="bi bi-calendar-check me-2 text-success" aria-hidden="true"></i>Attendance Overview
+                <div class="card-header d-flex justify-content-between align-items-center py-3"
+                     style="background:var(--ims-accent);border-radius:8px 8px 0 0;">
+                    <h6 class="fw-bold mb-0 text-white">
+                        <i class="bi bi-calendar-check me-2" aria-hidden="true"></i>Attendance Overview
                     </h6>
-                    <a href="{% url 'intern_attendance_today' %}" class="btn btn-sm btn-success fw-semibold">
+                    <a href="{% url 'intern_attendance_today' %}" class="btn btn-sm" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);font-size:.75rem;">
                         <i class="bi bi-clock me-1" aria-hidden="true"></i>Mark / View Today
                     </a>
                 </div>
@@ -271,36 +277,36 @@
                     {% if stats %}
                         <div class="row g-3 mb-4 text-center">
                             <div class="col-3">
-                                <div class="p-2 border rounded bg-success bg-opacity-10">
-                                    <small class="text-success d-block fw-semibold">Present</small>
-                                    <span class="fs-4 fw-bold text-success">{{ stats.present_days }}</span>
+                                <div class="p-2 border rounded" style="background:#E8F5E9;">
+                                    <small class="d-block fw-semibold" style="color:var(--ims-success);">Present</small>
+                                    <span class="fs-4 fw-bold" style="color:var(--ims-success);">{{ stats.present_days }}</span>
                                 </div>
                             </div>
                             <div class="col-3">
-                                <div class="p-2 border rounded bg-warning bg-opacity-10">
-                                    <small class="text-warning d-block fw-semibold">Leave</small>
-                                    <span class="fs-4 fw-bold text-warning">{{ stats.leave_days }}</span>
+                                <div class="p-2 border rounded" style="background:#FFF3E0;">
+                                    <small class="d-block fw-semibold" style="color:var(--ims-warning);">Leave</small>
+                                    <span class="fs-4 fw-bold" style="color:var(--ims-warning);">{{ stats.leave_days }}</span>
                                 </div>
                             </div>
                             <div class="col-3">
-                                <div class="p-2 border rounded bg-danger bg-opacity-10">
-                                    <small class="text-danger d-block fw-semibold">Absent</small>
-                                    <span class="fs-4 fw-bold text-danger">{{ stats.absent_days }}</span>
+                                <div class="p-2 border rounded" style="background:#FFEBEE;">
+                                    <small class="d-block fw-semibold" style="color:var(--ims-danger);">Absent</small>
+                                    <span class="fs-4 fw-bold" style="color:var(--ims-danger);">{{ stats.absent_days }}</span>
                                 </div>
                             </div>
                             <div class="col-3">
-                                <div class="p-2 border rounded bg-info bg-opacity-10">
-                                    <small class="text-info d-block fw-semibold">Rate</small>
-                                    <span class="fs-4 fw-bold text-info">{{ stats.attendance_percentage }}%</span>
+                                <div class="p-2 border rounded" style="background:#E8EDF5;">
+                                    <small class="d-block fw-semibold" style="color:var(--ims-accent);">Rate</small>
+                                    <span class="fs-4 fw-bold" style="color:var(--ims-accent);">{{ stats.attendance_percentage }}%</span>
                                 </div>
                             </div>
                         </div>
                     {% endif %}
 
-                    <h6 class="fw-bold text-dark mb-2 small">Recent Attendance Log</h6>
+                    <h6 class="fw-bold mb-2 small" style="color:var(--ims-text-main);">Recent Attendance Log</h6>
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0 small">
-                            <thead class="bg-light">
+                        <table class="table ims-table mb-0" aria-label="Recent attendance records">
+                            <thead>
                                 <tr>
                                     <th>Date</th>
                                     <th>Status</th>
@@ -337,62 +343,67 @@
             </div>
         </div>
 
-        <!-- Right Side: Account, Logbook & Documents Cards -->
+        <!-- Right side: Account + Logbook + Evaluation -->
         <div class="col-lg-4">
-            <!-- Account Info Card -->
+            <!-- Account Info -->
             <div class="card ims-card border-0 shadow-sm mb-4">
-                <div class="card-header bg-transparent border-bottom py-3">
-                    <h6 class="fw-bold mb-0"><i class="bi bi-person-circle me-2 text-success" aria-hidden="true"></i>Your Account</h6>
+                <div class="card-header py-3" style="background:var(--ims-accent);border-radius:8px 8px 0 0;">
+                    <h6 class="fw-bold mb-0 text-white" style="font-size:.85rem;">
+                        <i class="bi bi-person-circle me-2" aria-hidden="true"></i>Your Account
+                    </h6>
                 </div>
                 <div class="card-body d-flex flex-column gap-2">
-                    <div class="d-flex justify-content-between small py-1 border-bottom">
-                        <span class="text-muted">Full Name</span>
-                        <span class="fw-semibold">{{ request.user.get_full_name|default:request.user.email }}</span>
+                    <div class="ims-info-row">
+                        <span class="ims-info-label">Full Name</span>
+                        <span class="ims-info-value">{{ request.user.get_full_name|default:request.user.email }}</span>
                     </div>
-                    <div class="d-flex justify-content-between small py-1 border-bottom">
-                        <span class="text-muted">Email</span>
-                        <span class="fw-semibold">{{ request.user.email }}</span>
+                    <div class="ims-info-row">
+                        <span class="ims-info-label">Email</span>
+                        <span class="ims-info-value" style="font-size:.8rem;">{{ request.user.email }}</span>
                     </div>
-                    <div class="d-flex justify-content-between small py-1 border-bottom">
-                        <span class="text-muted">Role</span>
-                        <span class="badge bg-success">Intern</span>
+                    <div class="ims-info-row">
+                        <span class="ims-info-label">Role</span>
+                        <span class="ims-info-value"><span class="badge bg-success">Intern</span></span>
                     </div>
-                    <div class="d-flex justify-content-between small py-1">
-                        <span class="text-muted">Status</span>
-                        <span class="badge bg-success">Active</span>
+                    <div class="ims-info-row">
+                        <span class="ims-info-label">Status</span>
+                        <span class="ims-info-value"><span class="badge bg-success">Active</span></span>
                     </div>
                     <hr class="my-1">
                     <div class="d-flex gap-2">
-                        <a href="{% url 'password_change' %}" class="btn btn-outline-success btn-sm w-50">
+                        <a href="{% url 'password_change' %}" class="btn btn-outline-secondary btn-sm w-50" id="passwordBtn">
                             <i class="bi bi-key me-1" aria-hidden="true"></i>Password
                         </a>
-                        <a href="{% url 'documents:document_list' %}" class="btn btn-outline-primary btn-sm w-50">
+                        <a href="{% url 'documents:document_list' %}" class="btn btn-outline-secondary btn-sm w-50" id="documentsBtn">
                             <i class="bi bi-folder2-open me-1" aria-hidden="true"></i>Documents
                         </a>
                     </div>
                 </div>
             </div>
 
-            <!-- Daily Logbook Card -->
+            <!-- Daily Logbook -->
             <div class="card ims-card border-0 shadow-sm mb-4">
-                <div class="card-header bg-transparent border-bottom py-3 d-flex justify-content-between align-items-center">
-                    <h6 class="fw-bold mb-0 text-dark">
-                        <i class="bi bi-journal-text me-2 text-info" aria-hidden="true"></i>Daily Logbook
+                <div class="card-header d-flex justify-content-between align-items-center py-3"
+                     style="background:var(--ims-accent);border-radius:8px 8px 0 0;">
+                    <h6 class="fw-bold mb-0 text-white" style="font-size:.85rem;">
+                        <i class="bi bi-journal-text me-2" aria-hidden="true"></i>Daily Logbook
                     </h6>
-                    <span class="badge bg-info text-dark">Total Logs: {{ log_stats.total|default:0 }}</span>
+                    <span class="badge" style="background:rgba(255,255,255,.15);color:#fff;font-size:.7rem;border:1px solid rgba(255,255,255,.25);">
+                        Total Logs: {{ log_stats.total|default:0 }}
+                    </span>
                 </div>
                 <div class="card-body p-0">
                     {% if latest_log %}
                     <div class="p-3 border-bottom small">
-                        <div class="text-muted fw-semibold text-uppercase letter-spacing-1 mb-2" style="font-size: 0.7rem;">Latest Log</div>
+                        <div class="text-muted fw-semibold text-uppercase mb-2" style="font-size:.68rem;letter-spacing:.05em;">Latest Log</div>
                         <div class="d-flex justify-content-between align-items-start mb-1">
-                            <span class="fw-bold text-dark">{{ latest_log.title }}</span>
+                            <span class="fw-bold" style="color:var(--ims-text-main);">{{ latest_log.title }}</span>
                             <span class="text-muted">{{ latest_log.date|date:"M j" }}</span>
                         </div>
                         <div class="mb-2 text-muted text-truncate">{{ latest_log.description }}</div>
                         <div class="d-flex gap-2">
                             <span class="badge {{ latest_log.get_status_badge_class }}">{{ latest_log.get_status_display }}</span>
-                            <span class="badge bg-light text-dark border">{{ latest_log.hours_worked }}h</span>
+                            <span class="badge ims-badge-soft-secondary">{{ latest_log.hours_worked }}h</span>
                         </div>
                     </div>
                     {% else %}
@@ -401,46 +412,49 @@
                         <span class="text-muted small">No logs submitted yet.</span>
                     </div>
                     {% endif %}
-                    <div class="p-3 bg-light border-top text-center small text-muted">
-                        Total Hours Logged: <strong class="text-dark">{{ log_stats.total_hours|default:0 }}</strong>
+                    <div class="p-3 text-center small text-muted" style="background:#FAFAFA;border-top:1px solid var(--ims-border-light);">
+                        Total Hours Logged: <strong style="color:var(--ims-text-main);">{{ log_stats.total_hours|default:0 }}</strong>
                     </div>
                 </div>
                 <div class="card-footer bg-transparent border-top p-0">
                     <div class="d-flex">
-                        <a href="{% url 'intern_log_create' %}" class="btn btn-link text-decoration-none w-50 py-2 small fw-semibold border-end">
-                            <i class="bi bi-plus-circle me-1" aria-hidden="true"></i> Add Log
+                        <a href="{% url 'intern_log_create' %}" class="btn btn-link text-decoration-none w-50 py-2 small fw-semibold border-end"
+                           style="color:var(--ims-accent);">
+                            <i class="bi bi-plus-circle me-1" aria-hidden="true"></i>Add Log
                         </a>
-                        <a href="{% url 'intern_logbook' %}" class="btn btn-link text-decoration-none w-50 py-2 small fw-semibold">
+                        <a href="{% url 'intern_logbook' %}" class="btn btn-link text-decoration-none w-50 py-2 small fw-semibold"
+                           style="color:var(--ims-accent);">
                             View All <i class="bi bi-arrow-right ms-1" aria-hidden="true"></i>
                         </a>
                     </div>
                 </div>
             </div>
 
-            <!-- Evaluation Status Card -->
+            <!-- Evaluation Status -->
             <div class="card ims-card border-0 shadow-sm mb-4">
-                <div class="card-header bg-transparent border-bottom py-3">
-                    <h6 class="fw-bold mb-0 text-dark">
-                        <i class="bi bi-award me-2 text-success" aria-hidden="true"></i>Evaluation Status
+                <div class="card-header py-3" style="background:var(--ims-accent);border-radius:8px 8px 0 0;">
+                    <h6 class="fw-bold mb-0 text-white" style="font-size:.85rem;">
+                        <i class="bi bi-award me-2" aria-hidden="true"></i>Evaluation Status
                     </h6>
                 </div>
                 <div class="card-body text-center p-4">
                     {% if evaluation %}
-                        <div class="display-4 fw-bold text-success mb-2">{{ evaluation.overall_score }}</div>
+                        <div class="display-4 fw-bold mb-2" style="color:var(--ims-success);">{{ evaluation.overall_score }}</div>
                         <div class="text-muted small mb-3">Overall Score</div>
                         <span class="badge bg-success">{{ evaluation.get_final_recommendation_display }}</span>
                     {% else %}
-                        <i class="bi bi-clock-history text-muted mb-2" style="font-size: 2rem;" aria-hidden="true"></i>
-                        <p class="text-muted small mb-0">Pending evaluation</p>
+                        <i class="bi bi-clock-history text-muted mb-2" style="font-size:2rem;" aria-hidden="true"></i>
+                        <p class="text-muted small mb-0">Pending evaluation by supervisor</p>
                     {% endif %}
                 </div>
                 <div class="card-footer bg-transparent border-top p-0">
-                    <a href="{% url 'evaluations:intern_progress' %}" class="btn btn-link text-decoration-none text-success w-100 py-2 small fw-semibold">
+                    <a href="{% url 'evaluations:intern_progress' %}"
+                       class="btn btn-link text-decoration-none w-100 py-2 small fw-semibold"
+                       style="color:var(--ims-accent);">
                         View Progress Report <i class="bi bi-arrow-right ms-1" aria-hidden="true"></i>
                     </a>
                 </div>
             </div>
-
         </div>
     </div>
 

@@ -15,7 +15,7 @@
                     <li class="breadcrumb-item active" aria-current="page">{{ log.date|date:"M j, Y" }}</li>
                 </ol>
             </nav>
-            <h2 class="fw-bold mb-0 text-dark">{{ log.title }}</h2>
+            <h2 class="ims-page-title">{{ log.title }}</h2>
             <p class="text-muted small mb-0">
                 {{ log.date|date:"l, F j, Y" }} &bull;
                 {{ log.hours_worked }} hour{{ log.hours_worked|pluralize }} worked
@@ -60,11 +60,11 @@
 
             <!-- Log Details Card -->
             <div class="card ims-card border-0 shadow-sm">
-                <div class="card-header bg-transparent border-bottom py-3 d-flex justify-content-between align-items-center">
-                    <h6 class="fw-bold mb-0 text-dark">
-                        <i class="bi bi-journal-text me-2 text-success"></i>Log Details
+                <div class="card-header py-3 d-flex justify-content-between align-items-center" style="background: var(--ims-primary); border-radius: 8px 8px 0 0;">
+                    <h6 class="fw-bold mb-0 text-white">
+                        <i class="bi bi-journal-text me-2"></i>Log Details
                     </h6>
-                    <span class="badge {{ log.get_status_badge_class }}">{{ log.get_status_display }}</span>
+                    <span class="badge bg-white" style="color: var(--ims-primary);">{{ log.get_status_display }}</span>
                 </div>
                 <div class="card-body p-4">
 

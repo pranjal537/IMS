@@ -16,7 +16,7 @@
                             <li class="breadcrumb-item active" aria-current="page">{{ task.title|truncatechars:25 }}</li>
                         </ol>
                     </nav>
-                    <h2 class="fw-bold mb-0 text-dark">{{ page_title|default:"Task Details" }}</h2>
+                    <h2 class="ims-page-title">{{ page_title|default:"Task Details" }}</h2>
                 </div>
                 <div class="d-flex gap-2">
                     <a href="{% url 'intern_task_list' %}" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1">

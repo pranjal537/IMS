@@ -14,7 +14,7 @@
                     <li class="breadcrumb-item active" aria-current="page">Today's Attendance</li>
                 </ol>
             </nav>
-            <h2 class="fw-bold mb-0 text-dark">Today's Attendance</h2>
+            <h2 class="ims-page-title">Today's Attendance</h2>
             <p class="text-muted small mb-0">{{ today|date:"L, F j, Y" }}</p>
         </div>
         <div>
@@ -32,7 +32,7 @@
                     <div class="mb-3">
                         <div class="rounded-circle bg-light border mx-auto d-flex align-items-center justify-content-center text-primary fw-bold"
                              style="width:72px;height:72px;font-size:2rem;">
-                            <i class="bi bi-calendar-check"></i>
+                            <i class="bi bi-calendar-check" style="color:var(--ims-primary);"></i>
                         </div>
                     </div>
 
@@ -68,7 +68,7 @@
                         </form>
                     {% else %}
                         <!-- Checked in and checked out -->
-                        <div class="badge bg-primary px-3 py-2 fs-6 mb-3">Attendance Complete</div>
+                        <div class="badge px-3 py-2 fs-6 mb-3" style="background:var(--ims-primary);">Attendance Complete</div>
                         <div class="py-3 border-top border-bottom my-3 small">
                             <div class="row g-2">
                                 <div class="col-6">Check-in: <strong class="text-dark">{{ today_record.check_in|time:"h:i A" }}</strong></div>

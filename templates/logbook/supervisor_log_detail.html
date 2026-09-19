@@ -15,7 +15,7 @@
                     <li class="breadcrumb-item active" aria-current="page">Review Log</li>
                 </ol>
             </nav>
-            <h2 class="fw-bold mb-0 text-dark">Daily Log Review</h2>
+            <h2 class="ims-page-title">Daily Log Review</h2>
             <p class="text-muted small mb-0">
                 Log entry by <strong>{{ log.intern.user.get_full_name }}</strong> for {{ log.date|date:"F j, Y" }}
             </p>
@@ -45,9 +45,9 @@
             {% endif %}
 
             <div class="card ims-card border-0 shadow-sm mb-4">
-                <div class="card-header bg-transparent border-bottom py-3 d-flex justify-content-between align-items-center">
-                    <h6 class="fw-bold mb-0 text-dark">
-                        <i class="bi bi-file-text me-2 text-primary"></i>Activity Details
+                <div class="card-header py-3 d-flex justify-content-between align-items-center" style="background: var(--ims-primary); border-radius: 8px 8px 0 0;">
+                    <h6 class="fw-bold mb-0 text-white">
+                        <i class="bi bi-file-text me-2"></i>Activity Details
                     </h6>
                     <span class="badge bg-light text-dark border">{{ log.hours_worked }} hours</span>
                 </div>

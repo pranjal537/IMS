@@ -15,7 +15,7 @@
                     <li class="breadcrumb-item active" aria-current="page">My Interns</li>
                 </ol>
             </nav>
-            <h2 class="fw-bold mb-0 text-dark">My Assigned Interns</h2>
+            <h2 class="ims-page-title">My Assigned Interns</h2>
             <p class="text-muted small mb-0">Manage and monitor interns assigned under your supervision.</p>
         </div>
     </div>
@@ -82,10 +82,10 @@
                             <div class="mt-3">
                                 <div class="d-flex justify-content-between align-items-center small mb-1">
                                     <span class="fw-semibold text-dark">Working Days Progress</span>
-                                    <span class="fw-bold text-primary">{{ item.metrics.progress_percentage }}%</span>
+                                    <span class="fw-bold" style="color:var(--ims-primary);">{{ item.metrics.progress_percentage }}%</span>
                                 </div>
-                                <div class="progress" style="height: 8px;">
-                                    <div class="progress-bar {% if item.metrics.progress_percentage == 100 %}bg-success{% else %}bg-primary{% endif %}"
+                                <div class="ims-gov-progress" style="height:8px;">
+                                    <div class="ims-gov-progress-bar"
                                          role="progressbar" style="width: {{ item.metrics.progress_percentage }}%;"
                                          aria-valuenow="{{ item.metrics.progress_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>

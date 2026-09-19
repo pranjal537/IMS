@@ -17,7 +17,7 @@
                     </li>
                 </ol>
             </nav>
-            <h2 class="fw-bold mb-0 text-dark">{{ page_title }}</h2>
+            <h2 class="ims-page-title">{{ page_title }}</h2>
             {% if is_edit and log.is_rejected %}
             <p class="text-muted small mb-0">
                 <span class="badge bg-danger me-1">Rejected</span>
@@ -63,9 +63,9 @@
             {% endif %}
 
             <div class="card ims-card border-0 shadow-sm">
-                <div class="card-header bg-transparent border-bottom py-3">
-                    <h6 class="fw-bold mb-0 text-dark">
-                        <i class="bi bi-journal-plus me-2 text-success"></i>
+                <div class="card-header py-3" style="background: var(--ims-primary); border-radius: 8px 8px 0 0;">
+                    <h6 class="fw-bold mb-0 text-white">
+                        <i class="bi bi-journal-plus me-2"></i>
                         {% if is_edit %}Update Daily Log{% else %}New Daily Log Entry{% endif %}
                     </h6>
                 </div>
@@ -177,8 +177,8 @@
         <!-- Info Sidebar -->
         <div class="col-lg-4">
             <div class="card ims-card border-0 shadow-sm mb-4">
-                <div class="card-header bg-transparent border-bottom py-3">
-                    <h6 class="fw-bold mb-0"><i class="bi bi-info-circle me-2 text-primary"></i>Guidelines</h6>
+                <div class="card-header py-3" style="background: var(--ims-primary); border-radius: 8px 8px 0 0;">
+                    <h6 class="fw-bold mb-0 text-white"><i class="bi bi-info-circle me-2"></i>Guidelines</h6>
                 </div>
                 <div class="card-body small text-muted">
                     <ul class="list-unstyled mb-0">

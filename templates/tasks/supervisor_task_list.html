@@ -15,7 +15,7 @@
                     <li class="breadcrumb-item active" aria-current="page">Tasks</li>
                 </ol>
             </nav>
-            <h2 class="fw-bold mb-0 text-dark">{{ page_title|default:"Intern Tasks" }}</h2>
+            <h2 class="ims-page-title">{{ page_title|default:"Intern Tasks" }}</h2>
         </div>
         <div class="d-flex gap-2">
             <a href="{% url 'supervisor_task_create' %}" class="btn btn-sm btn-primary d-flex align-items-center gap-1">
@@ -76,8 +76,8 @@
     <div class="card ims-card border-0 shadow-sm">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover mb-0 align-middle">
-                    <thead class="bg-light">
+                <table class="table ims-table table-hover mb-0 align-middle">
+                    <thead>
                         <tr>
                             <th class="ps-3">Task</th>
                             <th>Intern</th>

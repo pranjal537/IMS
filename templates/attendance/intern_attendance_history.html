@@ -14,18 +14,18 @@
                     <li class="breadcrumb-item active" aria-current="page">Attendance History</li>
                 </ol>
             </nav>
-            <h2 class="fw-bold mb-0 text-dark">Attendance History</h2>
+            <h2 class="ims-page-title">Attendance History</h2>
             <p class="text-muted small mb-0">Complete log of your daily attendance records.</p>
         </div>
         <div>
-            <a href="{% url 'intern_attendance_today' %}" class="btn btn-success btn-sm fw-semibold">
+            <a href="{% url 'intern_attendance_today' %}" class="btn btn-primary btn-sm fw-semibold">
                 <i class="bi bi-clock me-1"></i>Today's Attendance
             </a>
         </div>
     </div>
 
     <!-- Filter Card -->
-    <div class="card ims-card border-0 shadow-sm mb-4 p-3">
+    <div class="card ims-card border-0 shadow-sm mb-4 p-3 border-top-primary">
         <form method="get" class="row g-3 align-items-center">
             <div class="col-md-5">
                 <label class="form-label small fw-semibold mb-1">Filter by Month</label>
@@ -53,8 +53,8 @@
     <div class="card ims-card border-0 shadow-sm">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="bg-light">
+                <table class="table ims-table table-hover align-middle mb-0">
+                    <thead>
                         <tr>
                             <th class="ps-4">Date</th>
                             <th>Day</th>
