@@ -69,8 +69,8 @@ class Command(BaseCommand):
         # 2. Create Supervisor User & Profile
         sup_user, sup_created = self._create_or_update_user(
             email='supervisor@example.com',
-            first_name='Ramesh',
-            last_name='Adhikari',
+            first_name='Sameep',
+            last_name='Chudal',
             role='SUPERVISOR',
             password=demo_password,
             reset=options.get('reset', False),
@@ -83,14 +83,18 @@ class Command(BaseCommand):
                 'phone': '+977-9852012345',
                 'position': 'Senior IT Officer',
                 'department': departments['Information Technology'],
+                'profile_photo': 'profiles/supervisors/sameep_chudal.jpg',
             }
         )
+        if not sup_profile.profile_photo:
+            sup_profile.profile_photo = 'profiles/supervisors/sameep_chudal.jpg'
+            sup_profile.save()
 
         # 3. Create Intern User & Profile
         int_user, int_created = self._create_or_update_user(
-            email='intern@example.com',
-            first_name='Aayush',
-            last_name='Sharma',
+            email='Pranzolbhattarae@gmil.com',
+            first_name='Pranjal',
+            last_name='Bhattarai',
             role='INTERN',
             password=demo_password,
             reset=options.get('reset', False),
@@ -101,12 +105,16 @@ class Command(BaseCommand):
             defaults={
                 'intern_id': 'DMK-INT-001',
                 'phone': '+977-9812345678',
-                'college': 'Damak Multiple Campus',
-                'program': 'Bachelor of Information Technology (BIT)',
-                'semester_or_year': '7th Semester',
+                'college': 'IIC',
+                'program': 'Web Development',
+                'semester_or_year': '4th',
                 'address': 'Damak-6, Jhapa, Koshi Province',
+                'profile_photo': 'profiles/interns/pranjal_bhattarai.jpeg',
             }
         )
+        if not int_profile.profile_photo:
+            int_profile.profile_photo = 'profiles/interns/pranjal_bhattarai.jpeg'
+            int_profile.save()
 
         # 4. Create Active Internship
         internship, int_record_created = Internship.objects.get_or_create(
@@ -114,7 +122,7 @@ class Command(BaseCommand):
             defaults={
                 'supervisor': sup_profile,
                 'department': departments['Information Technology'],
-                'position': 'Software & Systems Intern',
+                'position': 'Web Development Intern',
                 'start_date': date(2026, 8, 1),
                 'expected_end_date': date(2026, 10, 31),
                 'status': InternshipStatus.ACTIVE,

@@ -126,3 +126,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         if self.last_name:
             initials += self.last_name[0].upper()
         return initials or self.email[0].upper()
+
+    def get_profile_photo_url(self):
+        """Return profile photo URL if available, else None."""
+        try:
+            if self.is_supervisor and hasattr(self, 'supervisor_profile') and self.supervisor_profile.profile_photo:
+                return self.supervisor_profile.profile_photo.url
+            if self.is_intern and hasattr(self, 'intern_profile') and self.intern_profile.profile_photo:
+                return self.intern_profile.profile_photo.url
+        except Exception:
+            pass
+        return None

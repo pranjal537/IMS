@@ -264,26 +264,4 @@ def password_change_view(request):
     return render(request, 'accounts/password_change.html', {'form': form})
 
 
-# ─── System Health ────────────────────────────────────────────────────────────
 
-def health_view(request):
-    """System health check and diagnostic test page."""
-    db_engine = django_settings.DATABASES['default']['ENGINE'].split('.')[-1]
-    db_name = django_settings.DATABASES['default'].get('NAME', 'N/A')
-
-    context = {
-        'system_status': 'Operational',
-        'django_version': django.get_version(),
-        'python_version': sys.version.split()[0],
-        'db_engine': db_engine,
-        'db_name': str(db_name),
-        'debug_mode': django_settings.DEBUG,
-        'timezone': str(django_settings.TIME_ZONE),
-        'server_time': timezone.now(),
-        'installed_apps_count': len(django_settings.INSTALLED_APPS),
-        'ims_apps': [
-            'accounts', 'interns', 'attendance', 'logbook',
-            'tasks', 'evaluations', 'documents'
-        ]
-    }
-    return render(request, 'health.html', context)

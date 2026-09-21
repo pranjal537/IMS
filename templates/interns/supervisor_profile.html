@@ -42,6 +42,14 @@
 
                         <div class="mb-4">
                             <label class="form-label fw-semibold small">Profile Photo</label>
+                            {% if profile.profile_photo %}
+                                <div class="d-flex align-items-center gap-3 mb-2">
+                                    <img src="{{ profile.profile_photo.url }}" alt="Current Photo"
+                                         class="rounded-circle img-thumbnail"
+                                         style="width: 50px; height: 50px; object-fit: cover;">
+                                    <span class="small text-muted">Current photo active</span>
+                                </div>
+                            {% endif %}
                             {{ form.profile_photo }}
                             {% if form.profile_photo.errors %}<div class="text-danger small">{{ form.profile_photo.errors.0 }}</div>{% endif %}
                         </div>
@@ -60,6 +68,23 @@
                     <h6 class="fw-bold mb-0 text-dark"><i class="bi bi-shield-lock me-2 text-primary"></i>System Information (Protected)</h6>
                 </div>
                 <div class="card-body small">
+                    <div class="text-center py-3 border-bottom mb-3">
+                        {% if profile.profile_photo %}
+                            <img src="{{ profile.profile_photo.url }}" alt="{{ request.user.get_full_name }}"
+                                 class="rounded-circle img-thumbnail shadow-sm mb-2"
+                                 style="width: 110px; height: 110px; object-fit: cover;">
+                        {% else %}
+                            <div class="rounded-circle text-white d-inline-flex align-items-center justify-content-center fw-bold shadow-sm mb-2"
+                                 style="width: 110px; height: 110px; font-size: 2.2rem; background: var(--ims-primary);">
+                                {{ request.user.get_initials }}
+                            </div>
+                        {% endif %}
+                        <h5 class="fw-bold mb-0 text-dark">{{ request.user.get_full_name }}</h5>
+                        <p class="text-muted small mb-1">{{ profile.position|default:"Municipal Supervisor" }}</p>
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-1">
+                            <i class="bi bi-building me-1"></i>{{ profile.department.name|default:"Damak Municipality" }}
+                        </span>
+                    </div>
                     <div class="py-2 border-bottom d-flex justify-content-between">
                         <span class="text-muted">Full Name</span>
                         <strong class="text-dark">{{ request.user.get_full_name }}</strong>
